@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.logo {
+    font-size: larger;
+}
+
+label{
+    font-size: medium;
+}
+
+#parking{
+    font-size: larger;
+    font-weight: bold;
+    padding: 10px;
+    border-bottom: 4px solid white;
+}
+
+
+.navi li:hover {
+   
+    font-size: large;
+    font-weight: bold;
+    padding: 5px;
+    border-bottom: 4px solid white;
+   
+}
+
+header {
+    color: white;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background: rgba(0, 0, 0, 0.511);
+}
+
+.navi ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.navi li {
+    margin: 0 20px;
+}
+
+.navi a {
+    text-decoration: none;
+    color: white;
+}
+
+.navi li:hover {
+    font-size: larger;
+
+}
+
+.navi ul button {
+    padding: 10px 15px;
+    background-color: #000000;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+}
+
+
+.container{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+}
+
+.form-container{
+    display: flex;
+    background-color: #EFBF04;
+    flex-direction: column;
+    align-items: center;
+    width: 45vw;
+    border-radius: 20px;
+    height: 70vh;
+    color: white;
+}
+
+.form-group input {
+    display: flex;          
+    flex-direction: column; 
+    margin: 5px 0px 15px 0px;  
+    border: 1px solid  rgba(255, 255, 255, 77%);
+    background-color: transparent;
+    height: 30px;
+    border-radius: 4px;
+    width: 17vw;
+   
+}
+
+.column{
+    display: flex;
+    gap: 50px;
+    margin-top: 5px;
+  
+}
+#column-margin{
+    margin-top: 30px;
+}
+
+.form-container p{
+    margin: 0px 0px 0px 130px;
+    font-size: larger;
+}
+
+
+
+.date-time input{
+    width: 110px;
+    height: 24px;
+    text-align: center;
+    color: white;
+    margin-top: 10px;
+    background-color: #0b0b0b3e;
+    border: none;
+    
+
+}
+
+
+
+.paynow-btn{
+    background-color: rgb(12, 130, 91);
+    height: 40px;
+    width: 150px;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.paynow-btn button{
+    width: 110px;
+    height: 40px;
+    background-color:  rgb(12, 130, 91);
+    border: none;
+    color: white;
+    font-size: larger;
+    border-radius: 10px;
+    cursor: pointer;
+
+    
+}
+
+.cart{
+    height: 30px;
+   
+}

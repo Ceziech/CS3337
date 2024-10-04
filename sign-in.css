@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+ 
+ body {
+    height: 100%;
+    margin: 0px 15px 0px 25px;
+    background-color: #EDEDED;
+    font-family: 'Poopins' , sans-serif;
+}
+
+.form-container{
+    display: flex;
+    background-color: #EFBF04;
+    flex-direction: column;
+    align-items: center;
+    width: 35vw;
+    border-radius: 50px;
+    height: 80vh;
+    color: white;
+    margin-left: 200px;
+   
+
+}
+
+
+
+
+#img1{
+    height: 75vh;
+    margin-right: 4%;
+}
+
+
+
+.container{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+}
+
+
+
+.logo{
+    font-size: larger;
+    font-weight: bold;
+    
+}
+
+.form-group input {
+    display: flex;          
+    flex-direction: column; 
+    margin: 5px 0px 15px 0px;  
+    border: 1px solid  rgba(255, 255, 255, 77%);
+    background-color: transparent;
+    height: 30px;
+    border-radius: 2px;
+    width: 22vw;
+}
+
+.form-box{
+    margin: 20px 0px 20px 0px;
+}
+
+.form-box input{
+    border: 111px solid white;
+    
+}
+
+.form-box label{
+    font-size: small;
+}
+
+
+.form-buttons{
+    margin-top: 50px;
+    display: flex;
+}
+
+
+.form-buttons button{
+
+    padding: 12px;
+    border-radius: 5px;
+    font-size: smaller;
+}
+
+.create-account{
+background-color: rgb(136, 255, 136);
+border: none;
+margin-right: 20px;
+cursor: pointer;
+
+}
+
+
+
+.google-button img{
+    height: 5px;
+    width: 5px;
+}
+
+.form-buttons img{
+
+    height: 20px;
+    width: 20px;
+
+}
+
+.google-login {
+    background-color: white;
+    text-align: center;
+    display: flex; 
+    align-items: center; 
+    border-radius: 5px;
+    padding-right: 5px;
+    font-size: smaller;
+  
+}
+
+.img2{
+   margin: 0px 7px 0px 7px;
+}
+
+.google-button{
+ 
+    text-decoration: none;
+    text-wrap: nowrap;
+}
+
+
+.create-account a{
+    text-decoration: none;
+    color: black;
+}

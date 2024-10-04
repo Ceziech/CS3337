@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSULA Parking</title>
+    <link rel="stylesheet" href="parking-details.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <p>CSULA Parking</p>
+        </div>
+
+        <nav class="navi">
+            <ul>
+                <li><a href="home.html">Home</a></li>
+                <li id="parking"><a href="#">Parking</a></li>
+                <button>Sign Up</button>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+
+        <h1>Parking Details</h1>
+
+        <div class="form-container">
+
+            <form>
+                <div class="column" id="column-margin">
+                    <div class="form-group">
+                        <label for="name">Model No:</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">License Plate:</label>
+                        <input type="text"  required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Color:</label>
+                    <input type="text"  required>
+                </div>
+                <span>Time Duration:</span>
+                <div class="column">
+                    
+                    <div class="form-group date-time" >
+                       
+                        <label for="date"></label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group date-time">
+                        <label for="time"></label>
+                        <input type="time" id="time" name="time" required>
+                    </div>
+                </div>
+
+                <p>To</p>
+
+
+                
+                <div class="column">
+                    <div class="form-group date-time">
+                        <label for="date"></label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    <div class="form-group date-time">
+                        <label for="time"></label>
+                        <input type="time" id="time" name="time" required>
+                    </div>
+                </div>
+
+                <div class="paynow-btn">
+                    <button>Pay Now</button>
+                    <img src="New folder/Shopping cart.png" alt="" srcset="" class="cart">
+                </div>
+
+
+            </form>
+
+        </div>
+</body>
+
+</html>
