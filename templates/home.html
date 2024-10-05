@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home page</title>
-    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
    
 </head>
 
@@ -19,9 +19,9 @@
         <nav class="navi">
             <ul>
                 <li class="home"><a href="">Home</a></li>
-                <li><a href="parking-details.html">Parking</a></li>
+                <li><a href="{{ url_for('parking_details') }}">Parking</a></li>
                 <button>
-                <a href="sign-in.html">Sign Up</a>    
+                <a href="{{ url_for('sign_in') }}">Sign Up</a>
                 </button>
             </ul>
         </nav>
@@ -37,18 +37,18 @@
         </p>
         <div class="tick">
             <button  class="tick-button">
-               <a href="sign-in.html"> Get Started</a>
+               <a href="{{ url_for('sign_in') }}"> Get Started</a>
             </button>
-            <img src="New folder/Tick.png" alt="Tick Mark" class="tick-icon">
+            <img src="{{ url_for('static', filename='images/Tick.png') }}" alt="Tick Mark" class="tick-icon">
         </div>
     </div>
 
 
     <footer>
         <div class="footer-images">
-            <img src="New folder/facebbok.png" alt="Image 1" class="footer-image">
-            <img src="New folder/insta.png" alt="Image 2" class="footer-image">
-            <img src="New folder/twitter.png" alt="Image 3" class="footer-image">
+            <img src="{{ url_for('static', filename='images/facebbok.png') }}" alt="Image 1" class="footer-image">
+            <img src="{{ url_for('static', filename='images/insta.png') }}" alt="Image 2" class="footer-image">
+            <img src="{{ url_for('static', filename='images/twitter.png') }}" alt="Image 3" class="footer-image">
         </div>
     </footer>
 

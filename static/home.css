@@ -10,7 +10,7 @@ html, body {
 body {
     display: flex;
     flex-direction: column;
-    background-image: url("New folder/car-image.jpg");
+    background-image: url("images/car-image.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

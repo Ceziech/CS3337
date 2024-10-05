@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Sign In</title>
-        <link rel="stylesheet" href="sign-in.css">
+        <link rel="stylesheet" href="{{ url_for('static', filename='sign-in.css') }}">
     </head>
 
     <body>
@@ -54,10 +54,10 @@
                         <div class="form-buttons">
                             <div class="btn1">
                                 <button type="submit" class="create-account">
-                                    <a href="parking-details.html">Create an Account</a></button>
+                                    <a href="{{ url_for('parking_details') }}">Create an Account</a></button>
                             </div>
                             <div class="google-login">
-                                <img src="New folder/google-icon.png" alt="" class="img2">
+                                <img src="{{ url_for('static', filename='images/google-icon.png') }}" alt="" class="img2">
                                 <a href="" class="google-button">Login with Google</a>
                             </div>
                         </div>
@@ -65,8 +65,7 @@
 
                     </form>
                 </div>
-
-                <img id="img1" src="New folder/img.JPG" alt="">
+                <img id="img1" src="{{ url_for('static', filename='images/img.JPG') }}" alt="">
 
 
 

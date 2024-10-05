@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSULA Parking</title>
-    <link rel="stylesheet" href="parking-details.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='parking-details.css') }}">
 </head>
 
 <body>
@@ -16,7 +16,7 @@
 
         <nav class="navi">
             <ul>
-                <li><a href="home.html">Home</a></li>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
                 <li id="parking"><a href="#">Parking</a></li>
                 <button>Sign Up</button>
             </ul>
@@ -76,7 +76,7 @@
 
                 <div class="paynow-btn">
                     <button>Pay Now</button>
-                    <img src="New folder/Shopping cart.png" alt="" srcset="" class="cart">
+                    <img src="{{ url_for('static', filename='images/Shopping cart.png') }}" alt="" srcset="" class="cart">
                 </div>
 
 
