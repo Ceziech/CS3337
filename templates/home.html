@@ -18,11 +18,14 @@
 
         <nav class="navi">
             <ul>
-                <li class="home"><a href="">Home</a></li>
+                <li class="home"><a href="{{ url_for('home') }}">Home</a></li>
                 <li><a href="{{ url_for('parking_details') }}">Parking</a></li>
-                <button>
-                <a href="{{ url_for('sign_in') }}">Sign Up</a>
-                </button>
+                {% if 'user_id' in session %}
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% else %}
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                    <li><a href="{{ url_for('sign_in') }}">Sign-Up</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>

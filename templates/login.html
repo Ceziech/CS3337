@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+
+<body>
+    <header>
+        <div class="logo">
+            <p>CSULA Parking</p>
+        </div>
+
+        <nav class="navi">
+            <ul>
+                <li class="home"><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('parking_details') }}">Parking</a></li>
+                <li><a href="{{ url_for('sign_in') }}">Sign-Up</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="form-container">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <footer>
+        <div class="footer-images">
+            <img src="{{ url_for('static', filename='images/facebbok.png') }}" alt="Image 1" class="footer-image">
+            <img src="{{ url_for('static', filename='images/insta.png') }}" alt="Image 2" class="footer-image">
+            <img src="{{ url_for('static', filename='images/twitter.png') }}" alt="Image 3" class="footer-image">
+        </div>
+    </footer>
+
+</body>
+
+</html>

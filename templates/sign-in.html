@@ -20,7 +20,7 @@
             <div class="container">
                 <div class="form-container">
                     <h2>Create an Account</h2>
-                    <form>
+                    <form method="POST" action="{{ url_for('sign_in') }}">
 
                         <div class="form-group">
                             <label for="name">Name:</label>
@@ -34,7 +34,9 @@
                             <label for="password">Password:</label>
                             <input type="password" id="password" name="password" required>
                         </div>
-
+                        <button type="submit" class="create-account">Create an Account</button>
+                        <p>Already have an account? <a href="{{ url_for('login') }}">Log in Here</a></p>
+                        <!--
                         <div class="form-box">
                             <input type="checkbox" id="remember" name="remember">
                             <span></span>
@@ -50,17 +52,15 @@
                             </label>
 
                         </div>
+                        -->
 
-                        <div class="form-buttons">
-                            <div class="btn1">
-                                <button type="submit" class="create-account">
-                                    <a href="{{ url_for('parking_details') }}">Create an Account</a></button>
-                            </div>
+
+                            <!--
                             <div class="google-login">
                                 <img src="{{ url_for('static', filename='images/google-icon.png') }}" alt="" class="img2">
                                 <a href="" class="google-button">Login with Google</a>
                             </div>
-                        </div>
+                            -->
 
 
                     </form>
