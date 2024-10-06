@@ -38,8 +38,17 @@ def sign_in():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
+
         if len(name) < 2 or len(name) > 50 or not re.match("^[A-Za-z0-9]+$", name):
             return "Invalid Name. Please ensure the name is between 1-50 characters.", 400
+
+        email_regex = r="^[^\s@]+@[^\s@]+\.[^\s@]+$";
+        if not re.match(email_regex, email):
+            return "Invalid email. Please enter a valid email.", 400
+
+        if len(password) < 8 or not re.search(r"\d", password) or not re.search(r"[!@#$%^&*]", password):
+            return "Invalid password. Must contain at least 8 characters, 1 special character and 1 number.", 400
+
         new_user = User(name=name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
