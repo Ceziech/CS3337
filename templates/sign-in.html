@@ -14,17 +14,17 @@
                 <p>CSULA parking</p>
             </div>
 
-
-
-
             <div class="container">
                 <div class="form-container">
                     <h2>Create an Account</h2>
-                    <form method="POST" action="{{ url_for('sign_in') }}">
 
+                    <form id="signUpForm" method="POST" action="{{ url_for('sign_in') }}">
                         <div class="form-group">
                             <label for="name">Name:</label>
                             <input type="text" id="name" name="name" required>
+                            <small id="nameError" style="color: red; display: none;">
+                                Invalid name. Please enter a valid name.
+                            </small>
                         </div>
                         <div class="form-group">
                             <label for="email">Email:</label>
@@ -66,12 +66,21 @@
                     </form>
                 </div>
                 <img id="img1" src="{{ url_for('static', filename='images/img.JPG') }}" alt="">
-
-
-
             </div>
+        <script>
+            document.getElementById('signUpForm').onsubmit = function(event) {
+                const name = document.getElementById('name').value;
+                const nameError = document.getElementById('nameError');
+                const nameRegex = /^[a-zA-Z\s'-]+$/;
 
-
+                if (name.trim() === '' || name.length < 2 || name.length > 50 || !nameRegex.test(name)) {
+                    nameError.style.display = 'block';
+                    event.preventDefault();
+                } else {
+                    nameError.style.display = 'none';
+                }
+            };
+        </script>
 
     </body>
 

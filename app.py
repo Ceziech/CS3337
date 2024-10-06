@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
+import re
 
 load_dotenv()
 app = Flask(__name__)
@@ -37,6 +38,8 @@ def sign_in():
         name = request.form['name']
         email = request.form['email']
         password = request.form['password']
+        if len(name) < 2 or len(name) > 50 or not re.match("^[A-Za-z0-9]+$", name):
+            return "Invalid Name. Please ensure the name is between 1-50 characters.", 400
         new_user = User(name=name, email=email, password=password)
         db.session.add(new_user)
         db.session.commit()
