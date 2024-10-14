@@ -1,12 +1,39 @@
-
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
-
+.invisible-box {
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+    border-radius: 8px;
+}
+.navbar-custom {
+    background-color: #111111d0;
+}
+.footer-content {
+    padding-top: 13px;
+}
+.footer-content a svg {
+    transition: fill 0.3s ease-in-out;
+}
+.footer-content a:hover svg {
+    fill: #ffc107;
+}
+.footer-custom {
+    background-color: #111111;
+}
+.btn-custom {
+    background-color: #ffc107;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: transparent;
+    color: #ffc107;
+    border: 2px solid #ffc107;
+}
 html, body {
-    
+    background-color: #393939;
+    overscroll-behavior: contain;
     height: 100%;
     margin: 0;
 }
-
 body {
     display: flex;
     flex-direction: column;
@@ -16,129 +43,34 @@ body {
     background-repeat: no-repeat;
     font-family: 'Montserrat', sans-serif;
 }
-
-#home{
-
-    font-size: larger;
-    font-weight: bold;
-    padding: 10px;
-    border-bottom: 4px solid white;
-}
-
-.logo {
-    font-size: larger;
-}
-
-header {
+.navbar-nav .nav-link {
     color: white;
-    margin: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-    background: rgba(0, 0, 0, 0.249);
+    position: relative;
+    transition: color 0.3s ease-in-out;
 }
-
-.navi li {
-    display: inline;
-    margin: 20px;
+.navbar-nav .nav-link:hover {
+    color: #ffc107;
 }
-
-.navi a {
-    text-decoration: none;
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: #ffc107;
+    left: 0;
+    bottom: -5px;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+    transform-origin: right;
+}
+.navbar-nav .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+.navbar-brand {
     color: white;
+    transition: color 0.3s ease-in-out;
 }
-
-.navi li:hover {
-   
-    font-size: large;
-    font-weight: bold;
-    padding: 5px;
-    border-bottom: 4px solid white;
-   
-}
-
-.navi ul button {
-    padding: 10px 15px;
-    background-color: #000000;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-}
-
-.headings {
-    margin-top: 50px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: #e9e9e9;
-    flex: 1;
-}
-
-.headings h1 {
-    font-family: "Montserrat", sans-serif;
-    font-size: 3em; 
-    line-height: 1.2;
-    margin: 0;
-    color: transparent;
-    text-align: center;
-    margin-bottom: 10px;
-    background: linear-gradient(to right, #FFFFFF, #ADADAD);
-    background-clip: text;
-}
-
-.headings p {
-    margin-bottom: 50px;
-    font-weight: 500;
-    font-size: larger;
-    color: #e9e9e9;
-    text-shadow: 2px 7px 5px rgb(0 0 0 / 70%);
-}
-
-.tick {
-    display: flex;
-    align-items: center;
-    border: 10px solid black;
-    background-color: #000000;
-    border-radius: 50px;
-}
-
-.tick-button {
-    background-color: #000000;
-    color: white;
-    cursor: pointer; 
-    font-size: medium;
-    border: none;
-}
-
-.tick-icon {
-    width: 15px;
-    height: auto;
-    margin-left: 5px;
-}
-
-footer {
-    color: white;
-    padding: 5px;
-    text-align: center;
-}
-
-.footer-images {
-    margin-top: 10%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-}
-
-.footer-image {
-    width: 23px;
-    height: auto;
-}
-
-.tick-button a{
-    color: white;
-    text-decoration: none;
+.navbar-brand:hover {
+    color: #ffc107;
 }
