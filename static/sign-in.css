@@ -1,134 +1,141 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
- 
- body {
+html, body {
     height: 100%;
-    margin: 0px 15px 0px 25px;
-    background-color: #EDEDED;
-    font-family: 'Poopins' , sans-serif;
+}
+ 
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 1rem 2rem;
+    color: white;
+}
+
+.header .logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.navi .nav-links {
+    list-style-type: none;
+    display: flex;
+}
+
+.navi .nav-links li {
+    margin-left: 2rem;
+}
+
+.navi .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1.2rem;
+}
+
+.navi .nav-links li a:hover {
+    text-decoration: underline;
+    color: #ffc107;
+}
+
+.main-container{
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-image: url("/static/images/vecteezy_vector-interior-of-empty-underground-car-parking_21844520.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.content-box {
+    border: 1px solid #333;
+    padding: 2rem;
+    text-align: center;
+    width: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
 }
 
 .form-container{
-    display: flex;
-    background-color: #EFBF04;
-    flex-direction: column;
-    align-items: center;
-    width: 35vw;
-    border-radius: 50px;
-    height: 80vh;
-    color: white;
-    margin-left: 200px;
-   
-
+    margin-top: 1rem;
 }
 
-
-
-
-#img1{
-    height: 75vh;
-    margin-right: 4%;
+.form-group {
+    margin-bottom: 1rem;
 }
 
-
-
-.container{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 40px;
-}
-
-
-
-.logo{
-    font-size: larger;
-    font-weight: bold;
-    
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
 }
 
 .form-group input {
-    display: flex;          
-    flex-direction: column; 
-    margin: 5px 0px 15px 0px;  
-    border: 1px solid  rgba(255, 255, 255, 77%);
-    background-color: transparent;
-    height: 30px;
-    border-radius: 2px;
-    width: 22vw;
+    padding: 0.5rem;
+    border: 1px solid black;
+    border-radius: 4px;
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #333;
+    width: 100%;
 }
 
-.form-box{
-    margin: 20px 0px 20px 0px;
-}
-
-.form-box input{
-    border: 111px solid white;
-    
-}
-
-.form-box label{
-    font-size: small;
-}
-
-
-.form-buttons{
-    margin-top: 50px;
-    display: flex;
-}
-
-
-.form-buttons button{
-
-    padding: 12px;
-    border-radius: 5px;
-    font-size: smaller;
+.form-group input:focus {
+    outline: none;
+    border: 2px solid #000;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .create-account{
-background-color: rgb(136, 255, 136);
-border: none;
-margin-right: 20px;
-cursor: pointer;
-
-}
-
-
-
-.google-button img{
-    height: 5px;
-    width: 5px;
-}
-
-.form-buttons img{
-
-    height: 20px;
-    width: 20px;
-
-}
-
-.google-login {
-    background-color: white;
-    text-align: center;
-    display: flex; 
-    align-items: center; 
+    padding: 0.7rem 1.5rem;
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
     border-radius: 5px;
-    padding-right: 5px;
-    font-size: smaller;
-  
+    margin-top: 1rem;
+    text-align: center;
 }
 
-.img2{
-   margin: 0px 7px 0px 7px;
+.create-account:hover {
+    background-color: #333;
 }
 
-.google-button{
- 
+.login-redirect {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.login-redirect a {
+    color: blue;
     text-decoration: none;
-    text-wrap: nowrap;
 }
 
+.login-redirect a:hover {
+    text-decoration: underline;
+}
 
-.create-account a{
-    text-decoration: none;
-    color: black;
+.footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+}
+
+.footer a {
+    color: white;
 }
