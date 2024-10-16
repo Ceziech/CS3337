@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
 import os
@@ -69,7 +69,8 @@ def login():
             session['username'] = user.name
             return redirect(url_for('home'))
         else:
-            return "Invalid email or password", 401
+            flash('Invalid email or password', 'danger')
+            return redirect(url_for('login'))
     return render_template('login.html')
 
 @app.route('/logout')
