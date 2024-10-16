@@ -40,6 +40,16 @@
             </nav>
         </header>
 
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="container">
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         <!-- Login Form Section -->
         <div class="container d-flex justify-content-center align-items-center vh-100">
             <div class="invisible-box">
@@ -105,5 +115,4 @@
     ></script>
 
     </body>
-
 </html>
