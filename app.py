@@ -28,6 +28,10 @@ def home():
     else:
         return render_template('home.html')
 
+@app.route('/parking')
+def parking():
+    return render_template('parking.html')
+
 @app.route('/parking-details')
 def parking_details():
     return render_template('parking-details.html')
