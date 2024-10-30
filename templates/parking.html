@@ -30,7 +30,7 @@
                                 <a class="nav-link active" aria-current="page" href="{{ url_for('home') }}" aria-label="Go to Home Page">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="{{ url_for('parking_details') }}" aria-label="Go to Parking Page">Parking</a>
+                                <a class="nav-link active" aria-current="page" href="{{ url_for('parking') }}" aria-label="Go to Parking Page">Parking</a>
                             </li>
 
                             {% if 'user_id' in session %}
@@ -53,22 +53,22 @@
 
     <main>
         <div class="parking-grid">
-            <div class="card">
+            <div id="event-parking" class="card" data-url="{{ url_for('parking_details') }}">
                 <div class="card-icon">
                     <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40">
                 </div>
                 <h3>Event Parking</h3><p>For events at Luckman, LACHSA, Fine Arts Complex, Theatre, Athletic games and other events held on campus</p></div>
-            <div class="card">
+            <div id="visitor-parking" class="card" data-url="{{ url_for('parking_details') }}">
                 <div class="card-icon">
                     <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40">
                 </div>
                 <h3>Visitor Parking</h3><p>One-day parking for campus visitors</p></div>
-            <div class="card">
+            <div id="non-affiliated" class="card" data-url="{{ url_for('parking_details') }}">
                 <div class="card-icon">
                     <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40">
                 </div>
                 <h3>Non-Affiliated Parking Permits</h3><p>Buy a Non-Affiliated Parking Permit</p></div>
-            <div class="card">
+            <div id="high-school" class="card" data-url="{{ url_for('parking_details') }}">
                 <div class="card-icon">
                     <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40">
                 </div>
@@ -153,10 +153,12 @@
             </div>
         </footer>
 
+        <script src="{{ url_for('static', filename='js/parking.js') }}"></script>
         <script
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"
         ></script>
+
 </body>
 </html>
