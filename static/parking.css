@@ -1,19 +1,19 @@
 .parking-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 25px;
+    gap: 20px;
     padding: 18px;
 }
 
 .parking-grid .card:nth-last-child(2) {
     grid-column: 2 / 3;
     gap: 25px;
-    padding: 17px;
+    padding: 10px;
 }
 .parking-grid .card:nth-last-child(1) {
     grid-column: 3 / 4;
     gap: 25px;
-    padding: 17px;
+    padding: 10px;
 }
 
 .card {
