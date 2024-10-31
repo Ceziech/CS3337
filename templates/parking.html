@@ -53,12 +53,12 @@
 
     <main>
         <div class="parking-grid">
-            <div id="event-parking" class="card" data-url="{{ url_for('parking_details') }}?permit=event">
+            <div id="event-parking" class="card" data-url="{{ url_for('parking_details') }}?permit=event-parking">
                 <div class="card-icon">
                     <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40">
                 </div>
                 <h3>Event Parking</h3><p>For events at Luckman, LACHSA, Fine Arts Complex, Theatre, Athletic games and other events held on campus</p></div>
-            <div id="visitor-parking" class="card" data-url="{{ url_for('parking_details') }}?permit=event">
+            <div id="visitor-parking" class="card" data-url="{{ url_for('parking_details') }}?permit=visitor">
                 <div class="card-icon">
                     <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40">
                 </div>

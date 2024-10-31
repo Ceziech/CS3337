@@ -22,11 +22,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const permit = urlParams.get("permit");
 
     const permitOptions = document.querySelectorAll(".permit-option");
+
     permitOptions.forEach(option => {
         const button = option.querySelector(".permit-button");
         const description = option.querySelector(".permit-description");
 
-        if (button.dataset.permit === permit) {
+        if (permit === "event-parking" && (button.dataset.permit === "event" || button.dataset.permit === "athletic")) {
+            option.style.display = "block";
+            description.style.display = "block";
+        } else if (permit === "visitor" && button.dataset.permit === "event") {
+            option.style.display = "block";
+            description.style.display = "block";
+        } else if (permit === "nonaffiliated" && button.dataset.permit === "nonaffiliated") {
+            option.style.display = "block";
+            description.style.display = "block";
+        } else if (permit === "highschool" && button.dataset.permit === "highschool") {
+            option.style.display = "block";
+            description.style.display = "block";
+        } else if (permit === "2wheel" && button.dataset.permit === "2wheel") {
             option.style.display = "block";
             description.style.display = "block";
         } else {
@@ -43,7 +56,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 const otherButton = otherOption.querySelector(".permit-button");
                 otherButton.classList.remove("selected-button");
                 otherOption.querySelector("p").style.display = "block";
-                otherOption.style.display = (otherButton.dataset.permit === permit) ? "block" : "none";
+
+                if (permit === "event-parking" && (otherButton.dataset.permit === "event" || otherButton.dataset.permit === "athletic")) {
+                    otherOption.style.display = "block";
+                } else if (permit === "visitor" && otherButton.dataset.permit === "event") {
+                    otherOption.style.display = "block";
+                } else if (otherButton.dataset.permit === permit) {
+                    otherOption.style.display = "block";
+                } else {
+                    otherOption.style.display = "none";
+                }
+
                 const checkmark = otherButton.querySelector(".checkmark");
                 if (checkmark) {
                     checkmark.remove();
