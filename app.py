@@ -36,6 +36,10 @@ def parking():
 def parking_details():
     return render_template('parking-details.html')
 
+@app.route('/tickets')
+def tickets():
+    return render_template('tickets.html')
+
 @app.route('/sign-in', methods=['GET', 'POST'])
 def sign_in():
     if request.method == 'POST':
