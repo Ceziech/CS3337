@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Event Parking</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
@@ -18,9 +19,14 @@
       href="{{ url_for('static', filename='home.css') }}"
     />
     <link
+    rel="stylesheet"
+    href="{{ url_for('static', filename='event-parking.css') }}"
+  />
+<!-- 
+    <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='parking.css') }}"
-    />
+      href="{{ url_for('static', filename='parking-details.css') }}"
+    /> -->
   </head>
 
   <body>
@@ -79,6 +85,98 @@
       </nav>
     </header>
 
+    <!--  Modal HTML Section -->
+    <div
+      class="modal fade"
+      id="termsModal"
+      tabindex="-1"
+      aria-labelledby="termsModalLabel"
+      aria-hidden="true"
+      data-bs-backdrop="static"
+      data-bs-keyboard="false"
+    >
+      <div class="modal-dialog modal-sg custom-modal-spacing">
+        <div class="modal-content custom-modal-size">
+          <div class="modal-header">
+            <h4 class="modal-title" id="termsModalLabel">
+              Parking Terms of Services
+            </h4>
+          </div>
+          <div class="modal-body custom-modal-body">
+            <hr />
+            <ul class="custom-modal-list">
+              <li>
+                The city of Los Angeles collects a 10% parking tax from all
+                drivers who park on campus, as approved by the California
+                Supreme Court. This 10% parking tax is added to the cost of all
+                parking permits sold on campus or through payroll deduction,
+                which includes daily, semester, and annual permits, with the
+                exception of on-campus resident student semester permits.
+              </li>
+              <li>
+                I agree and understand Cal State LA's Parking Rules and
+                Regulations listed on webpage
+              </li>
+              <li>
+                All parking permits are virtual and permits will be enforced via
+                license plate number
+              </li>
+              <li>
+                Please have your vehicle information ready before purchase, Cal
+                State LA is not responsible for any vehicle information entered
+                incorrectly
+              </li>
+              <li>
+                Virtual permits are valid as of effective date listed and expire
+                at 11 p.m. on expiration date listed. If purchased after
+                effective date permit is valid when transaction is completed and
+                confirmed. No temporary permits are required. Purchaser is
+                responsible for renewing any permits prior to expiration.
+              </li>
+              <li>
+                Permit does not guarantee a place to park. You may be redirected
+                to alternate parking lots.
+              </li>
+              <li>
+                2-wheel permits are valid in designated 2-wheel spaces only and
+                are NOT valid on vehicles with more than 2 wheels or in vehicle
+                spaces.
+              </li>
+              <li>Permit is not transferable.</li>
+              <li>
+                Cal State LA facilities are not intended for use as storage. The
+                university reserves the right to remove or impound abandoned
+                vehicles at owner's expense.
+              </li>
+              <li>
+                A service fee for all credit card purchases will be applied at
+                checkout.
+              </li>
+              <li>
+                For U-Pass Purchases, All sales are final and no refunds will be
+                issued. You will receive an email with your PERMIT/CODE to
+                activate your U-Pass. This PERMIT/CODE will be shown on your
+                receipt and can only be used once.
+              </li>
+            </ul>
+            <hr />
+          </div>
+          <div class="modal-footer d-flex justify-content-center">
+            <button id="agreeButton" class="btn btn-primary">
+              I agree with the terms of Services
+            </button>
+            <button
+              id="cancelButton"
+              class="btn btn-secondary"
+              data-url="{{ url_for('parking') }}"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 
     {% with messages = get_flashed_messages(with_categories=true) %} {% if
     messages %}
     <div class="container">
@@ -86,71 +184,49 @@
       <div class="alert alert-{{ category }}">{{ message }}</div>
       {% endfor %}
     </div>
-    {% endif %} {% endwith %}
-    <!-- blog start-->
+    {% endif %} {% endwith %} -->
+    <!--start-->
     <div class="container mt-4">
       <div class="row">
         <!-- Main Content Area -->
         <div class="col-md-8">
-          <h1 class="mb-4">Latest Posts</h1>
+          <h1 class="mb-4">Latest Events</h1>
 
-          <!-- Blog Post 1-->
+          <!--Post 1-->
           <div class="card mb-4">
             <div class="card-body">
-              <h2 class="card-title">Blog Post Title 1</h2>
-              <p class="card-text">
-                This is a brief description of the blog post.
-                <a href="https://news.calstatela.edu/">Read more...</a>
-              </p>
-              <p class="text-muted">Posted on October 31, 2024</p>
+              <h2 class="card-title">Parking Event 1</h2>
+              <p class="card-text">Buy a 1-day ticket to event 1</p>
+              <a href="{{ url_for('SampleEvent') }}" class="btn btn-primary">Buy Ticket</a>
             </div>
+            <p class="text-muted">Posted on October 31, 2024</p>
           </div>
 
-          <!-- Blog Post 2-->
-          <div class="card mb-4">
+         <!--Post 2-->
+         <div class="card mb-4">
             <div class="card-body">
-              <h2 class="card-title">Blog Post Title 2</h2>
-              <p class="card-text">
-                This is a brief description of another blog post.
-                <a href="#">Read more...</a>
-              </p>
-              <p class="text-muted">Posted on October 29, 2024</p>
+              <h2 class="card-title">Parking Event 2</h2>
+              <p class="card-text">Buy a 1-day ticket to event 1</p>
+              <a href="{{ url_for('SampleEvent') }}" class="btn btn-primary">Buy Ticket</a>
             </div>
+            <p class="text-muted">Posted on October 31, 2024</p>
           </div>
-          <!-- Blog Post 3-->
-          <div class="card mb-4">
+          
+          <!--Post 3-->
+          <div class="card mb-4" >
             <div class="card-body">
-              <h2 class="card-title">Blog Post Title 3</h2>
-              <p class="card-text">
-                This is a brief description of another blog post.
-                <a href="#">Read more...</a>
-              </p>
-              <p class="text-muted">Posted on October 26, 2024</p>
+              <h2 class="card-title">Parking Event 3</h2>
+              <p class="card-text">Buy a 1-day ticket to event 1</p>
+              <a href="{{ url_for('SampleEvent') }}" class="btn btn-primary">Buy Ticket</a>
             </div>
+            <p class="text-muted">Posted on October 31, 2024</p>
           </div>
-          <!-- Additional posts can be added here -->
-        </div>
-
-        <!-- Sidebar -->
-        <div class="col-md-4">
-          <h2 class="mb-4">Sidebar</h2>
-          <div class="card mb-4">
-            <div class="card-body">
-              <h5 class="card-title">About Us</h5>
-              <p class="card-text">
-                CalStateLA strives to create a safe, friendly, and accessible
-                environment where anyone can grab a pass and park in under 5
-                minutes!
-              </p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
-    <!-- blog end-->
+    <!--end-->
     <!-- Footer Section -->
-    <footer class="footer-custom text-white py-1">
-      <div class="container-fluid text-center">
+    <footer class="footer">
+      <div class="container">
         <div class="footer-content d-flex justify-content-center">
           <a
             href="https://www.facebook.com/CalStateLA/"
@@ -232,5 +308,6 @@
       integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
       crossorigin="anonymous"
     ></script>
+    <script src="{{ url_for('static', filename='js/parking-details.js') }}"></script>
   </body>
 </html>

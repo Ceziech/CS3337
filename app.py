@@ -6,13 +6,16 @@ import re
 
 load_dotenv()
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = 'GIGASECRETKEY'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:ixchie_G1118@localhost:5432/csula_parking'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
+
 class User(db.Model):
+    tablename = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -35,6 +38,19 @@ def parking():
 @app.route('/parking-details')
 def parking_details():
     return render_template('parking-details.html')
+
+@app.route('/tickets')
+def tickets():
+    return render_template('tickets.html')
+
+@app.route('/event-parking')
+def event_parking():
+    return render_template('event-parking.html')
+
+@app.route('/SampleEvent')
+def SampleEvent():
+    return render_template('SampleEvent.html')
+    
 
 @app.route('/sign-in', methods=['GET', 'POST'])
 def sign_in():
