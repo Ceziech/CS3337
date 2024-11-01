@@ -8,9 +8,9 @@ import re
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
+app.secret_key = 'GIGASECRETKEY'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres:yourpassword@localhost:5432/users')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres:yourpassword@localhost:5432/DATABASE_NAME')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -21,9 +21,9 @@ class User(db.Model):
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    phone = db.Column(db.String(20))  # Optional field for personal info
-    address = db.Column(db.String(120))  # Optional field for personal info
-
+    phone = db.Column(db.String(20))  # Optional field for personal info ADD THESE TO YOUR DATABASES
+    address = db.Column(db.String(120))  # Optional field for personal info ADD THESE TO YOUR DATABASES
+fo
     def __repr__(self):
         return f'<User {self.name}>'
 
@@ -34,8 +34,8 @@ def home():
     if 'user_id' in session:
         return render_template('home.html', username=session['username'])
     return render_template('home.html')
-
 # Sign-in route
+
 @app.route('/sign-in', methods=['GET', 'POST'])
 def sign_in():
     if request.method == 'POST':
