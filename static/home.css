@@ -74,3 +74,17 @@ body {
 .navbar-brand:hover {
     color: #ffc107;
 }
+
+.custom-box {
+    background-color: #FFD700; /* Yellow background */
+    color: black;              /* Black text */
+    border: 2px solid black;   /* Black border */
+    padding: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;             /* Height of each box */
+    margin-top: 10px;
+}
