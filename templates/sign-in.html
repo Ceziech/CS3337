@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sign Up</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='sign-in.css') }}">
+    </head>
+
+    <body>
+        <header class="header">
+            <div class="logo">
+                <a href="{{ url_for('home') }}">CSULA PARKING</a>
+            </div>
+
+            <nav class="navi">
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('home') }}">Home</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <div class="main-container">
+            <div class="content-box">
+                <h2>Create an Account</h2>
+
+                <div class="form-container">
+                    <form id="signUpForm" method="POST" action="{{ url_for('sign_in') }}">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+                            <small id="nameError" style="color: red; display: none;">
+                                Invalid Name. Please ensure the name is between 1-50 characters.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                            <small id="emailError" style="color: red; display: none;">
+                                Invalid email. Please enter a valid email.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" required>
+                            <small id="passwordError" style="color: red; display: none;">
+                                Invalid password. Must contain at least 8 characters, 1 special character and 1 number.
+                            </small>
+                        </div>
+
+                        <button type="submit" class="create-account">Create an Account</button>
+
+                        <div class="login-redirect">
+                        <p>Already have an account? <a href="{{ url_for('login') }}">Log in Here</a></p>
+                        </div>
+                        <!--
+                        <div class="form-box">
+                            <input type="checkbox" id="remember" name="remember">
+                            <span></span>
+                            <label for="remember">Remember Me</label>
+                        </div>
+
+                        <div class="form-box">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <span></span>
+                            <label for="terms">
+                                I agree to all the <span style="color: rgb(15, 185, 15);">Terms</span> and <span
+                                    style="color: rgb(15, 185, 15);">Privacy policy</span>
+                            </label>
+
+                        </div>
+                        -->
+
+
+                            <!--
+                            <div class="google-login">
+                                <img src="{{ url_for('static', filename='images/google-icon.png') }}" alt="" class="img2">
+                                <a href="" class="google-button">Login with Google</a>
+                            </div>
+                            -->
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <footer class="footer">
+            <p>&copy; 2024 CSULA PARKING</p>
+            <p>Image Credit: <a href="https://www.vecteezy.com/free-vector/underground" target="_blank">Vector Image by Vecteezy</a></p>
+        </footer>
+
+        <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+    </body>
+
+</html>

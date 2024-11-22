@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Parking Checkout</title>
+    <link rel="stylesheet" href="shop_cart_page.css"> <!-- Updated CSS reference -->
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="calstatela_logo.png" alt="Cal State LA Logo" class="logo">
+            <h1>Parking and Transportation</h1>
+            <button class="login-btn">Login</button>
+        </div>
+        <p class="countdown">14:49 remaining to complete order</p>
+    </header>
+
+    <main>
+        <section class="cart">
+            <h2>Your Shopping Cart</h2>
+            <table id="cart-table">
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                    <th>View</th>
+                </tr>
+                <!-- Cart items will be dynamically added here -->
+            </table>
+            <div id="cart-summary">
+                <p id="subtotal">Sub-Total: $0.00</p>
+                <p id="tax">City of Los Angeles 10% Parking Occupancy Tax: $0.00</p>
+                <p id="total">Total: $0.00</p>
+            </div>
+            <button id="remove-item-btn" class="remove-btn">Remove</button>
+        </section>
+
+        <section class="checkout">
+            <h2>Checkout</h2>
+            <form>
+                <label for="email">Contact Information</label>
+                <input type="email" id="email" name="email" placeholder="Email*" required>
+                <div class="payment-icons">
+                    <img src="visa.png" alt="Visa">
+                    <img src="mastercard.png" alt="MasterCard">
+                    <img src="discover.png" alt="Discover">
+                </div>
+                <button type="submit" class="continue-btn">Continue</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>AIMS Web 9.0.0.20 © 2024 EDC Corporation</p>
+    </footer>
+
+    <script src="shop_cart_page.js"></script> <!-- Updated JS reference -->
+</body>
+</html>

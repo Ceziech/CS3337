@@ -1,0 +1,234 @@
+body {
+    background-color: #393939;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.card {
+    background-color: hwb(46 4% 13%);
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+.card_about {
+    background-color: #dfae09;
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+
+}
+.card_about_mini {
+    /* background-color: #d7a70a; */
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card-icon {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+p {
+    font-size: 0.9rem;
+    color: black;
+}
+
+.footer p {
+    color: white;
+}
+
+
+
+.navbar-custom {
+    background-color: #111111d0;
+}
+
+
+.footer{
+    background-color: #111111;
+    padding: 20px 0;
+    text-align: center;
+    margin:0px;
+}
+
+.btn-custom {
+    background-color: #ffc107;
+    color: white;
+    border: none;
+}
+.btn-custom:hover {
+    background-color: transparent;
+    color: #ffc107;
+    border: 2px solid #ffc107;
+}
+.navbar-nav .nav-link {
+    color: white;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+.navbar-nav .nav-link:hover {
+    color: #ffc107;
+}
+.navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: #ffc107;
+    left: 0;
+    bottom: -5px;
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+    transform-origin: right;
+}
+.navbar-nav .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+.navbar-brand {
+    color: white;
+    transition: color 0.3s ease-in-out;
+}
+.navbar-brand:hover {
+    color: #ffc107;
+}
+.custom-modal-list li {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.custom-modal-spacing .modal-dialog {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.custom-modal-body {
+    max-height: 500px;
+    overflow-y: auto;
+    padding: 15px;
+}
+.purchase-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+    color: white;
+}
+/* h2, h3 {
+    color: #ffc107;
+    font-weight: bold;
+    margin-bottom: 20px;
+} */
+.permit-option {
+    margin-bottom: 20px;
+}
+.permit-button {
+    width: 100%;
+    max-width: 500px;
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.permit-button:hover {
+    background-color: #ffc107;
+}
+.permit-description {
+    margin: 10px 0 0;
+    font-size: 0.95rem;
+    color: #ffffff;
+    font-weight: 500;
+    display: block;
+}
+.permit-button p {
+    margin: 10px 0 0;
+    font-size: 0.9rem;
+    color: white;
+}
+
+.login-button {
+    background-color: #333;
+    color: #ffc107;
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 500px;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    text-align: center;
+    display: block;
+}
+.login-button:hover {
+    background-color: #ffc107;
+    color: #333;
+}
+.selected-button {
+    background-color: #ffc107;
+    color: #333;
+    cursor: default;
+}
+.selected-description {
+    display: block;
+}
+.permit-option p {
+    display: none;
+}
+.selected-button ~ p {
+    display: block;
+    color: white;
+}
+.selected-button ~ .permit-description {
+    display: none;
+}
+.permit-selection-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.permit-selection {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+}
+.right-card {
+    position: absolute;
+    right: 20px; /* Adjust this value to set the distance from the right */
+    top: 20px; /* Adjust this value to set the distance from the top */
+    width: 300px; /* Set a width for the card */
+}   
+.left-card {
+    position: absolute;
+    left: 20px; /* Adjust this value to set the distance from the right */
+    top: 20px; /* Adjust this value to set the distance from the top */
+    width: 300px; /* Set a width for the card */
+}   

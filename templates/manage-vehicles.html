@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage Vehicle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='manage-vehicle.css') }}">
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='images/Kiok-pay-Photo-by-Brian-Delgado.jpg') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="main-container">
+        <div class="content-box">
+            <h2>Manage Your Vehicles</h2>
+
+            <div class="form-container">
+                <form method="POST" action="{{ url_for('manage_vehicle') }}">
+                    <div class="form-group">
+                        <label for="license_plate">License Plate:</label>
+                        <input type="text" id="license_plate" name="license_plate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="vehicle_type">Vehicle Type:</label>
+                        <input type="text" id="vehicle_type" name="vehicle_type" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="make">Make:</label>
+                        <input type="text" id="make" name="make" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="model">Model:</label>
+                        <input type="text" id="model" name="model" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="year">Year:</label>
+                        <input type="number" id="year" name="year" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="color">Color:</label>
+                        <input type="text" id="color" name="color" required>
+                    </div>
+                    <button type="submit" class="create-account">Add Vehicle</button>
+                </form>
+            </div>
+
+
+            <h3>Your Registered Vehicles</h3>
+            <ul>
+                {% for vehicle in vehicles %}
+                    <li>{{ vehicle.license_plate }} - {{ vehicle.make }} {{ vehicle.model }}
+                        <form action="{{ url_for('delete_vehicle', license_plate=vehicle.license_plate) }}" method="POST" style="display: inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

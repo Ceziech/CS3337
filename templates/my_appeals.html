@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Appeals</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>My Appeals</h2>
+        {% if appeals %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ticket Number</th>
+                        <th>Reason</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for appeal in appeals %}
+                        <tr>
+                            <td>{{ appeal.ticket_number }}</td>
+                            <td>{{ appeal.reason }}</td>
+                            <td>{{ appeal.status }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No appeals found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
