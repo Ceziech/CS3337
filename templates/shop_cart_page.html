@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Parking Checkout</title>
-    <link rel="stylesheet" href="shop_cart_page.css"> <!-- Updated CSS reference -->
+    <script src="https://js.stripe.com/v3/" async></script> <!-- Stripe Checkout Library! -->
+    <link rel="stylesheet" href="/static/shop_cart_page.css"> <!-- Updated CSS reference -->
 </head>
 <body>
     <header>
@@ -45,7 +46,7 @@
                     <img src="mastercard.png" alt="MasterCard">
                     <img src="discover.png" alt="Discover">
                 </div>
-                <button type="submit" class="continue-btn">Continue</button>
+                <button type="submit" class="continue-btn" id="continuestripe">Continue</button>
             </form>
         </section>
     </main>
@@ -55,5 +56,29 @@
     </footer>
 
     <script src="shop_cart_page.js"></script> <!-- Updated JS reference -->
+
+        <!-- Stripe Function -->
+    <script> 
+        var stripeAPI = Stripe(
+            "pk_live_51LDjiGKBruxK63vzhtfZ3mcVTtbUlh6JTYlXGmyRhuYyQCpFO12ILAYBDCwUcCHJxHZQ5AZBIUdDINCgem2iFxFh00Q8lTaL5Q"
+        )
+
+        document.getElementById("continuestripe").addEventListener("click", function() {
+
+            stripeAPI.redirectToCheckout ({
+                lineItems: [
+                    {
+                        price: "price_1QO66eKBruxK63vzOEyUA5b5",
+                        quantity: 1,
+                    },
+                ],
+                    mode: "one-time",
+                    successUrl: "/static/home.html",
+                    cancelURL: "/static/shop_cart_page.html",
+            }).then(function(result) {
+                alert(result)
+            });
+        })
+    </script>
 </body>
 </html>
