@@ -1,3 +1,23 @@
+.btn-home {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #007bff; 
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-decoration: none;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+}
+
+.btn-home:hover {
+    background-color: #0056b3; 
+    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -56,7 +76,7 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    background-image: url("/static/images/vecteezy_vector-interior-of-empty-underground-car-parking_21844520.jpg");
+    background-image: url("../images/Kiok-pay-Photo-by-Brian-Delgado.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;

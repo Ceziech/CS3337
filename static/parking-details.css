@@ -1,10 +1,16 @@
 html, body {
     background-color: #393939;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-image: url("images/schoolParkingStructureE-Photo-by-Brian-Delgado.jpg");
     overscroll-behavior: contain;
     height: 100%;
     margin: 0;
     display: flex;
     flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
 }
 .main-content {
     flex-grow: 1;
@@ -13,13 +19,6 @@ html, body {
     border-radius: 10px;
     max-width: 800px;
     margin: 20px auto;
-}
-body {
-    background-image: url("images/schoolParkingStructureE-Photo-by-Brian-Delgado.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    font-family: 'Montserrat', sans-serif;
 }
 .navbar-custom {
     background-color: #111111d0;
@@ -38,7 +37,9 @@ body {
     color: white;
     text-align: center;
     padding: 1rem 0;
+    width: 100%;
     position: relative;
+    margin-top: auto;
 }
 .btn-custom {
     background-color: #ffc107;
@@ -185,4 +186,89 @@ h2, h3 {
     width: 100%;
     max-width: 500px;
     margin-bottom: 20px;
+}
+.date-picker-container {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+.selected-date-box {
+    background-color: #ffc107;
+    color: black;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+.confirm-button {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+}
+.confirm-button:hover {
+    background-color: #ffc107;
+}
+#addVehicleBtn, #confirmVehicleBtn {
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+#addVehicleBtn:hover, #confirmVehicleBtn:hover {
+    background-color: #ffc107;
+    color: white;
+}
+.vehicle-form {
+    background-color: #444;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    color: white;
+}
+.vehicle-form label {
+    color: #ffc107;
+    font-weight: bold;
+}
+.vehicle-form input, .vehicle-form select {
+    background-color: #333;
+    color: white;
+    border: 1px solid white;
+}
+.vehicle-form input::placeholder, .vehicle-form select::placeholder {
+    color: white;
+    opacity: 1;
+}
+.vehicle-form input:focus {
+    color: black;
+    border-color: #ffc107;
+    outline: none;
+    box-shadow: 0 0 5px #ffc107;
+}
+.vehicle-form select:focus {
+    color: white;
+    border-color: #ffc107;
+    outline: none;
+    box-shadow: 0 0 5px #ffc107;
+}
+.vehicle-form button {
+    margin-top: 10px;
+}
+.confirmed-vehicle-btn {
+    background-color: #ffc107;
+    color: black;
+    border: none;
+    padding: 10px 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    display: inline-block;
+    margin-top: 10px;
+    text-align: center;
+}
+.confirmed-vehicle-btn:hover {
+    background-color: #e0a800;
+    text-decoration: none;
 }
