@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <link rel="stylesheet" href="/static/shop_cart_page.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>Your Shopping Cart</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="cart">
+            <h2>Items</h2>
+            <table id="cart-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Price</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Cart items will be rendered dynamically -->
+                </tbody>
+            </table>
+            <div id="cart-summary">
+                <p id="subtotal">Subtotal: $0.00</p>
+                <p id="tax">Tax (10%): $0.00</p>
+                <p id="total">Total: $0.00</p>
+            </div>
+        </section>
+
+        <section class="checkout">
+            <h2>Payment</h2>
+            <form id="payment-form">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                <div id="card-element"><!-- Stripe card input form --></div>
+                <button id="submit-button" type="button">Pay Now</button>
+                <div id="payment-message" class="hidden"></div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 CSULA Parking</p>
+    </footer>
+
+    <script>
+
+        const stripe = Stripe("pk_test_51QSwV5RptQOte5PDeL5SGTRQjwpY1v9mXHGqT2nnFgsHqA3Rhkt1qekf9FgoML68GqpJQUVPdAhb7A7FOyQU3wJA00BtaIOAlu");
+
+        const elements = stripe.elements();
+        const cardElement = elements.create("card");
+        cardElement.mount("#card-element");
+
+        const cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+        console.log(sessionStorage.getItem("cart"))
+        const cartTableBody = document.querySelector("#cart-table tbody");
+        const subtotalElem = document.getElementById("subtotal");
+        const taxElem = document.getElementById("tax");
+        const totalElem = document.getElementById("total");
+
+        function renderCart() {
+            const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+            console.log("Rendering cart:", cart); // Debugging log
+
+            cartTableBody.innerHTML = ""; // Clear the table
+            let subtotal = Number(0);
+            
+            cart.forEach((item) => {
+                subtotal += Number(item.price);
+                console.log(subtotal)
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>$${item.price}</td>
+                    <td><button class="remove-btn">Remove</button></td>
+                `;
+                cartTableBody.appendChild(row);
+            });
+
+            const tax = subtotal * 0.1; // 10% tax
+            const total = subtotal + tax;
+
+            subtotalElem.textContent = `Subtotal: $${subtotal}`;
+            taxElem.textContent = `Tax (10%): $${tax}`;
+            totalElem.textContent = `Total: $${total}`;
+        }
+
+
+        renderCart();
+
+        document.getElementById("submit-button").addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        if (!email) {
+            alert("Please enter your email.");
+            return;
+        }
+
+        const response = await fetch("/create-payment-intent", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ cart, email }),
+        });
+
+        const { clientSecret } = await response.json();
+
+        const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: cardElement,
+                billing_details: {
+                    email: email,
+                },
+            },
+        });
+
+        if (error) {
+            console.error("Payment failed", error);
+            document.getElementById("payment-message").textContent = "Payment failed. Please try again.";
+        } else if (paymentIntent.status === "succeeded") {
+            document.getElementById("payment-message").textContent = "Payment successful!";
+
+            // Call the backend to add permits
+            fetch("/payment-success", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user_id: sessionStorage.getItem("user_id"), cart }),
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    if (data.success) {
+                        console.log("Permits added successfully");
+                        sessionStorage.removeItem("cart"); // Clear cart
+                    } else {
+                        console.error("Failed to add permits:", data.error);
+                    }
+                })
+                .catch((err) => console.error("Error in payment-success call:", err));
+        }
+    });
+
+    </script>
+</body>
+</html>

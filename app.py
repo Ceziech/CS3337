@@ -1,8 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from dotenv import load_dotenv
+from twilio.rest import Client
+from datetime import datetime, timedelta
 import os
 import re
+import stripe
 
 # Load environment variables
 load_dotenv()
@@ -10,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = 'GIGASECRETKEY'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://postgres:yourpassword@localhost:5432/DATABASE_NAME')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'databaseurl')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -21,11 +24,86 @@ class User(db.Model):
     name = db.Column(db.String(80), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
-    phone = db.Column(db.String(20))  # Optional field for personal info ADD THESE TO YOUR DATABASES
-    address = db.Column(db.String(120))  # Optional field for personal info ADD THESE TO YOUR DATABASES
-fo
+    currently_due = db.Column(db.Integer, default=0)
+    is_admin = db.Column(db.Boolean, default=False)
     def __repr__(self):
         return f'<User {self.name}>'
+    
+class Permit(db.Model):
+    __tablename__ = 'permits'
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)  # Unique identifier for the permit
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Reference to the user
+    permit_type = db.Column(db.String(50), nullable=False)  # Type of permit (e.g., event, athletic)
+    start_date = db.Column(db.Date, nullable=False)  # Start date of the permit
+    end_date = db.Column(db.Date, nullable=False)  # End date of the permit
+    price = db.Column(db.Float, nullable=False)  # Price of the permit
+
+    # Define the relationship with the User table
+    user = db.relationship('User', backref=db.backref('permits', lazy=True))
+
+    def __repr__(self):
+        return f"<Permit {self.permit_type} for User {self.user_id}, valid from {self.start_date} to {self.end_date}>"
+
+
+class Transaction(db.Model):
+    __tablename__ = 'transactions'
+    trans_id = db.Column(db.Integer, primary_key=True)  # Primary Key
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Foreign Key
+    amount = db.Column(db.Integer, nullable=False)  # Transaction amount
+    date = db.Column(db.Date, default=db.func.current_date())  # Use DATE datatype
+    # description = db.Column(db.String(255), nullable=True)  # Optional description
+
+    # Define the relationship
+    user = db.relationship('User', backref=db.backref('transactions', lazy=True))
+
+    def __repr__(self):
+        return f'<Transaction {self.trans_id}, Amount: {self.amount}>'
+
+class Event(db.Model):
+    __tablename__ = 'events'
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    date = db.Column(db.Date, nullable=False)
+    link = db.Column(db.String(255), nullable=False)  # Link to the event details page
+    posted_on = db.Column(db.DateTime, default=db.func.now())  # When the event was created
+
+    def __repr__(self):
+        return f'<Event {self.title}>'
+
+class Vehicle(db.Model):
+    __tablename__ = 'vehicles'
+    
+    license_plate = db.Column(db.String(20), primary_key=True)  # Primary Key
+    vehicle_type = db.Column(db.String(50), nullable=False)    # Vehicle type (e.g., car, truck)
+    make = db.Column(db.String(50), nullable=False)            # Manufacturer
+    model = db.Column(db.String(50), nullable=False)           # Model of the vehicle
+    year = db.Column(db.Integer, nullable=False)               # Year of manufacturing
+    color = db.Column(db.String(20), nullable=False)           # Color of the vehicle
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)  # Foreign Key to users table
+
+    # Relationship to the User table
+    user = db.relationship('User', backref=db.backref('vehicles', lazy=True))
+
+    def __repr__(self):
+        return f'<Vehicle {self.license_plate} - {self.make} {self.model}>'
+
+
+
+def calculate_permit_dates(permit_type):
+    start_date = datetime.now().date()
+    if permit_type == "event" or permit_type == "athletic":
+        end_date = start_date  # Single-day permits
+    elif permit_type == "2wheel":
+        end_date = datetime(start_date.year, 12, 31).date()  # End of Fall semester
+    elif permit_type == "highschool":
+        end_date = datetime(start_date.year, 12, 31).date()  # End of Fall semester
+    elif permit_type == "nonaffiliated":
+        end_date = start_date + timedelta(days=30)  # 30-day permit
+    else:
+        raise ValueError("Unknown permit type")
+    return start_date, end_date
 
 # Home route
 @app.route('/')
@@ -72,11 +150,13 @@ def login():
         if user and user.password == password:
             session['user_id'] = user.id
             session['username'] = user.name
+            session['is_admin'] = user.is_admin  # Store admin status in session
             return redirect(url_for('home'))
         else:
             flash('Invalid email or password', 'danger')
             return redirect(url_for('login'))
     return render_template('login.html')
+
 
 # Logout route
 @app.route('/logout')
@@ -98,34 +178,182 @@ def get_user_data():
     if not user:
         return jsonify({'error': 'User not found'}), 404
 
-    # Example response data based on data type
     if data_type == 'personal_info':
         return jsonify({
             'data': {
                 'name': user.name,
                 'email': user.email,
-                'phone': user.phone,
-                'address': user.address
+                'phone': 'N/A',  # Replace with actual phone field if it exists
+                'address': 'N/A'  # Replace with actual address field if it exists
             }
         })
     elif data_type == 'past_due':
-        return jsonify({
-            'data': '150.00'  # Mock amount due
-        })
+        return jsonify({'data': user.currently_due})  # Mock data
     elif data_type == 'current_due':
-        return jsonify({
-            'data': '75.00'  # Mock current due amount
-        })
+        return jsonify({'data': user.currently_due})  # Mock data
     elif data_type == 'transaction_history':
-        return jsonify({
-            'data': [
-                'Payment of $50 on 2024-01-15',
-                'Payment of $100 on 2024-02-20',
-                'Payment of $75 on 2024-03-10'
-            ]  # Mock transaction history
-        })
+        # Fetch transactions for the user
+        transactions = Transaction.query.filter_by(user_id=user_id).order_by(Transaction.date.desc()).all()
+        transactions_data = [
+            {
+                'id': transaction.trans_id,
+                'amount': transaction.amount,
+                'date': transaction.date.isoformat()  # Convert to string format
+            }
+            for transaction in transactions
+        ]
+        return jsonify({'data': transactions_data})
     else:
         return jsonify({'error': 'Invalid data type requested'}), 400
+
+
+class Appeal(db.Model):
+    __tablename__ = 'appeals'
+    id = db.Column(db.Integer, primary_key=True)
+    ticket_number = db.Column(db.String(20), nullable=False)
+    reason = db.Column(db.Text, nullable=False)
+    contact_email = db.Column(db.String(120), nullable=False)
+    status = db.Column(db.String(20), default='Pending') 
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Appeal {self.ticket_number} - {self.status}>'
+
+# class Vehicle(db.Model):
+#     __tablename__ = 'vehicles'
+#     license_plate = db.Column(db.String(20), primary_key=True)
+#     vehicle_type = db.Column(db.String(50), nullable=False)
+#     make = db.Column(db.String(50), nullable=False)
+#     model = db.Column(db.String(50), nullable=False)
+#     year = db.Column(db.Integer, nullable=False)
+#     color = db.Column(db.String(20), nullable=False)
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+@app.route('/manage_vehicle', methods=['GET', 'POST'])
+def manage_vehicle():
+    if 'user_id' not in session:
+        flash("Please log in to manage your vehicles.", "warning")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        license_plate = request.form['license_plate']
+        vehicle_type = request.form['vehicle_type']
+        make = request.form['make']
+        model = request.form['model']
+        year = request.form['year']
+        color = request.form['color']
+        user_id = session['user_id']
+
+        existing_vehicle = Vehicle.query.get(license_plate)
+        if existing_vehicle:
+            flash("Vehicle already exists with this license plate.", "danger")
+        else:
+            new_vehicle = Vehicle(
+                license_plate=license_plate,
+                vehicle_type=vehicle_type,
+                make=make,
+                model=model,
+                year=year,
+                color=color,
+                user_id=user_id
+            )
+            db.session.add(new_vehicle)
+            db.session.commit()
+            flash("Vehicle added successfully.", "success")
+        return redirect(url_for('manage_vehicle'))
+
+    vehicles = Vehicle.query.filter_by(user_id=session['user_id']).all()
+    return render_template('manage-vehicle.html', vehicles=vehicles)
+
+@app.route('/delete_vehicle/<license_plate>', methods=['POST'])
+def delete_vehicle(license_plate):
+    if 'user_id' not in session:
+        flash("Please log in to manage your vehicles.", "warning")
+        return redirect(url_for('login'))
+
+    vehicle = Vehicle.query.get(license_plate)
+    if vehicle and vehicle.user_id == session['user_id']:
+        db.session.delete(vehicle)
+        db.session.commit()
+        flash("Vehicle deleted successfully.", "success")
+    else:
+        flash("Unauthorized access or vehicle not found.", "danger")
+    return redirect(url_for('manage_vehicle'))
+
+@app.route('/fetch_vehicle', methods=['POST'])
+def fetch_vehicle():
+    license_plate = request.json.get('license_plate')
+    vehicle = Vehicle.query.get(license_plate)
+    if vehicle:
+        vehicle_data = {
+            'vehicle_type': vehicle.vehicle_type,
+            'make': vehicle.make,
+            'model': vehicle.model,
+            'year': vehicle.year,
+            'color': vehicle.color
+        }
+        return jsonify(vehicle_data), 200
+    return jsonify({'error': 'Vehicle not found'}), 404
+
+@app.route('/appeals_ticket', methods=['GET', 'POST'])
+def appeals_ticket():
+    if 'user_id' not in session:
+        flash("Please log in to appeal a ticket", "warning")
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+       
+        flash("Thank you for your appeal request. We will get to it soon.", "success")
+       
+        return render_template('appeals_ticket.html')
+    
+    return render_template('appeals_ticket.html')
+
+def send_sms(to_number, message_body):
+    account_sid = os.getenv('TWILIO_ACCOUNT_SID')
+    auth_token = os.getenv('TWILIO_AUTH_TOKEN')
+    client = Client(account_sid, auth_token)
+    
+    ####### Send SMS
+    message = client.messages.create(
+        body=message_body,
+        from_=os.getenv('TWILIO_PHONE_NUMBER'),
+        to=to_number
+    )
+    return message.sid
+
+@app.route('/purchase_ticket', methods=['POST'])
+def purchase_ticket():
+    if 'user_id' not in session:
+        flash("Please log in to purchase a ticket", "warning")
+        return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    user = User.query.get(user_id)
+
+    ###### Verify that the user has a valid phone number before continuing
+    phone_number = '+12138224478'  ######## Replace with actual phone retrieval from user data table(Inprogress Hardcoded for now)
+
+    if phone_number:
+        ######## Send SMS confirmation
+        message_body = "Your Parking purchase has been confirmed. Thank you for your purchase!"######Will add different option onto the message in later iteration
+        try:
+            send_sms(phone_number, message_body)
+            flash("Ticket purchase confirmed. SMS confirmation sent.", "success")
+        except Exception as e:
+            flash(f"Failed to send SMS: {str(e)}", "danger")
+    else:
+        flash("No valid phone number provided for SMS confirmation.", "danger")
+
+    return redirect(url_for('home'))
+@app.route('/view_appeals')
+def view_appeals():
+    if 'user_id' not in session:
+        flash("Please log in to view your appeals", "warning")
+        return redirect(url_for('login'))
+    
+    appeals = Appeal.query.filter_by(user_id=session['user_id']).all()
+    return render_template('view_appeals.html', appeals=appeals)
 
 # Other routes for additional pages
 @app.route('/parking')
@@ -146,11 +374,258 @@ def tickets():
 
 @app.route('/event-parking')
 def event_parking():
-    return render_template('event-parking.html')
+    events = Event.query.order_by(Event.date.desc()).all()
+    return render_template('event-parking.html', events=events)
+
+
+@app.route('/shop_cart_page')
+def shop_cart_page():
+    return render_template('shop_cart_page.html')
 
 @app.route('/SampleEvent')
 def SampleEvent():
     return render_template('SampleEvent.html')
+
+@app.route('/view_transactions')
+def view_transactions():
+    if 'user_id' not in session:
+        flash("Please log in to view transactions.", "warning")
+        return redirect(url_for('login'))
+
+    user_id = session['user_id']
+    transactions = Transaction.query.filter_by(user_id=user_id).order_by(Transaction.date.desc()).all()
+    return render_template('view_transactions.html', transactions=transactions)
+
+@app.route('/admin/events', methods=['GET', 'POST'])
+def manage_events():
+    if 'admin_id' not in session:  # Check if the user is logged in as admin
+        # flash("You must be logged in as an admin to access this page.", "danger")
+        # return redirect(url_for('login'))
+        pass
+    
+    if request.method == 'POST':
+        # Handle event creation
+        title = request.form['title']
+        description = request.form['description']
+        date = request.form['date']
+        link = request.form['link']
+
+        new_event = Event(title=title, description=description, date=date, link=link)
+        db.session.add(new_event)
+        db.session.commit()
+        flash("Event added successfully.", "success")
+        return redirect(url_for('manage_events'))
+
+    # Fetch all events to display
+    events = Event.query.order_by(Event.date.desc()).all()
+    return render_template('admin_events.html', events=events)
+
+@app.route('/admin/get_user', methods=['POST'])
+def get_user():
+    if not session.get('is_admin'):  # Ensure only admins can access this
+        return jsonify({'error': 'Unauthorized access'}), 403
+
+    email = request.json.get('email')
+    user = User.query.filter_by(email=email).first()
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    return jsonify({
+        'id': user.id,
+        'name': user.name,
+        'email': user.email,
+        'currently_due': user.currently_due
+    })
+
+@app.route('/admin/edit_user', methods=['POST'])
+def edit_user():
+    if not session.get('is_admin'):  # Ensure only admins can access this
+        return jsonify({'error': 'Unauthorized access'}), 403
+
+    data = request.json
+    user = User.query.get(data.get('id'))
+
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+
+    # Update user information
+    user.name = data.get('name')
+    user.email = data.get('email')
+    user.currently_due = data.get('currently_due')
+
+    db.session.commit()
+    return jsonify({'success': True})
+
+@app.route('/admin/get_vehicle', methods=['POST'])
+def get_vehicle():
+    license_plate = request.json.get('license_plate')
+    vehicle = Vehicle.query.filter_by(license_plate=license_plate).first()
+
+    if not vehicle:
+        return jsonify({'error': 'Vehicle not found'}), 404
+
+    # Fetch the associated user's email
+    user = User.query.get(vehicle.user_id)
+
+    return jsonify({
+        'license_plate': vehicle.license_plate,
+        'vehicle_type': vehicle.vehicle_type,
+        'make': vehicle.make,
+        'model': vehicle.model,
+        'year': vehicle.year,
+        'color': vehicle.color,
+        'user_email': user.email if user else 'Unknown'  # Include the user email
+    })
+
+
+@app.route('/admin/edit_vehicle', methods=['POST'])
+def edit_vehicle():
+    # if not session.get('is_admin'):  # Ensure only admins can access this
+    #     return jsonify({'error': 'Unauthorized access'}), 403
+
+    data = request.json
+    vehicle = Vehicle.query.get(data.get('license_plate'))
+
+    if not vehicle:
+        return jsonify({'error': 'Vehicle not found'}), 404
+
+    # Update vehicle information
+    vehicle.vehicle_type = data.get('vehicle_type')
+    vehicle.make = data.get('make')
+    vehicle.model = data.get('model')
+    vehicle.year = data.get('year')
+    vehicle.color = data.get('color')
+
+    db.session.commit()
+    return jsonify({'success': True})
+
+stripe.api_key = "sk_test_51QSwV5RptQOte5PD2yrLVjo5qgTjJ3g0YdkKoMhKEj9Ey7SE8xINW8DkqpiVIXvv8v3tKibpr6LoTY3VUUHol8wt00Kwulp5Ae"
+
+@app.route('/create-checkout-session', methods=['POST'])
+def create_checkout_session():
+    try:
+        # Extract permit type from the POST request
+        data = request.json
+        permit_type = data.get('permit_type', '')
+
+        # Define pricing based on permit type
+        permit_prices = {
+            'event': 'price_1QSwg6RptQOte5PDjaXCvtqF',  # Example Stripe price ID
+            'athletic': 'price_1QSwhARptQOte5PD4fZ4SJAe',
+            '2wheel': 'price_1QSwhvRptQOte5PDkTYfjrph',
+            'highschool': 'price_1QSwiHRptQOte5PDMTFSDSIj',
+            'nonaffiliated': 'price_1QSwifRptQOte5PDduZdgV6D',
+        }
+
+        # Get the price ID for the selected permit
+        price_id = permit_prices.get(permit_type)
+        if not price_id:
+            return jsonify({'error': 'Invalid permit type selected'}), 400
+
+        # Create the checkout session
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price': price_id,
+                    'quantity': 1,
+                },
+            ],
+            mode='payment',
+            success_url=request.host_url + 'success',
+            cancel_url=request.host_url + 'cancel',
+        )
+
+        return jsonify({'success': True, 'redirect_url': session.url})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/create-payment-intent', methods=['POST'])
+def create_payment_intent():
+    try:
+        # Get cart and email from the frontend
+        data = request.json
+        cart = data.get('cart', [])
+        email = data.get('email')
+
+        # if not cart or not email:
+        #     return jsonify({"error": "Invalid request. Cart or email missing."}), 400
+
+        # Calculate total amount in cents (including tax)
+        total_amount = int(sum(float(item['price']) for item in cart) * 1.1 * 100)  # 10% tax
+
+        # Create a PaymentIntent
+        intent = stripe.PaymentIntent.create(
+            amount=total_amount,
+            currency='usd',
+            receipt_email=email,  # Send a receipt to the provided email
+            automatic_payment_methods={"enabled": True},  # Enable automatic payment methods
+        )
+
+        return jsonify({'clientSecret': intent['client_secret']})  # Send client_secret to frontend
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@app.route('/payment-success', methods=['POST'])
+def payment_success():
+    try:
+        data = request.json
+        cart = data.get('cart', [])
+
+        # Ensure user exists
+        user = User.query.filter_by(id=session['user_id']).first()
+        if not user:
+            return jsonify({"error": "User not found"}), 400
+
+        permits_created = []
+
+        # Add permits for each cart item
+        for item in cart:
+            app.logger.info(f"Processing item: {item}")
+            if not isinstance(item, dict):
+                app.logger.error(f"Invalid item in cart: {item}")
+                raise ValueError("Invalid item in cart")
+            permit_type = item['name']
+            price = item['price']
+            start_date, end_date = calculate_permit_dates(permit_type)
+
+            new_permit = Permit(
+                user_id=user.id,
+                permit_type=permit_type,
+                start_date=start_date,
+                end_date=end_date,
+                price=price
+            )
+            db.session.add(new_permit)
+            permits_created.append({
+                "id": new_permit.id,
+                "user_id": new_permit.user_id,
+                "permit_type": new_permit.permit_type,
+                "start_date": new_permit.start_date.isoformat(),
+                "end_date": new_permit.end_date.isoformat(),
+                "price": new_permit.price
+            })
+
+        db.session.commit()
+
+        app.logger.info(f"Permits created: {permits_created}")
+        return jsonify({"success": True, "message": "Permits created successfully!", "permits": permits_created})
+
+    except Exception as e:
+        db.session.rollback()
+        app.logger.error(f"Error processing payment success: {str(e)}")
+        return jsonify({"error": str(e)}), 400
+
+
+@app.route('/cancel')
+def cancel():
+    return "Payment canceled. Please try again."
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
 
 # Start the Flask app
 if __name__ == '__main__':

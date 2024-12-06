@@ -105,17 +105,34 @@
                         output = `<h3>Past Due Balance</h3>
                                   <table class="table">
                                     <tr><th>Amount Due</th><td>${data.data}</td></tr>
-                                </table>`;
+                                  </table>`;
                     } else if (dataType === 'current_due') {
-                        output = `<h3>Past Due Balance</h3>
+                        output = `<h3>Currently Due Balance</h3>
                                   <table class="table">
                                     <tr><th>Amount Due</th><td>${data.data}</td></tr>
-                                </table>`;
+                                  </table>`;
                     } else if (dataType === 'transaction_history') {
-                        output = `<h3>Past Due Balance</h3>
+                        // Correctly display transaction history
+                        output = `<h3>Transaction History</h3>
                                   <table class="table">
-                                    <tr><th>Amount Due</th><td>${data.data}</td></tr>
-                                </table>`;
+                                      <thead>
+                                          <tr>
+                                              <th>ID</th>
+                                              <th>Amount</th>
+                                              <th>Date</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>`;
+                        // Iterate over the transactions array
+                        data.data.forEach(transaction => {
+                            output += `
+                                <tr>
+                                    <td>${transaction.id}</td>
+                                    <td>${transaction.amount}</td>
+                                    <td>${transaction.date}</td>
+                                </tr>`;
+                        });
+                        output += `</tbody></table>`;
                     }
                     document.getElementById('dataDisplay').innerHTML = output;
                 }

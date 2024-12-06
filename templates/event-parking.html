@@ -188,40 +188,21 @@
     <!--start-->
     <div class="container mt-4">
       <div class="row">
-        <!-- Main Content Area -->
-        <div class="col-md-8">
-          <h1 class="mb-4">Latest Events</h1>
-
-          <!--Post 1-->
-          <div class="card mb-4">
-            <div class="card-body">
-              <h2 class="card-title">Parking Event 1</h2>
-              <p class="card-text">Buy a 1-day ticket to event 1</p>
-              <a href="{{ url_for('SampleEvent') }}" class="btn btn-primary">Buy Ticket</a>
-            </div>
-            <p class="text-muted">Posted on October 31, 2024</p>
-          </div>
-
-         <!--Post 2-->
-         <div class="card mb-4">
-            <div class="card-body">
-              <h2 class="card-title">Parking Event 2</h2>
-              <p class="card-text">Buy a 1-day ticket to event 1</p>
-              <a href="{{ url_for('SampleEvent') }}" class="btn btn-primary">Buy Ticket</a>
-            </div>
-            <p class="text-muted">Posted on October 31, 2024</p>
-          </div>
-          <!--Post 3-->
-          <div class="card mb-4" >
-            <div class="card-body">
-              <h2 class="card-title">Parking Event 3</h2>
-              <p class="card-text">Buy a 1-day ticket to event 1</p>
-              <a href="{{ url_for('SampleEvent') }}" class="btn btn-primary">Buy Ticket</a>
-            </div>
-            <p class="text-muted">Posted on October 31, 2024</p>
+          <!-- Main Content Area -->
+          <div class="col-md-8">
+              <h1 class="mb-4">Latest Events</h1>
+              {% for event in events %}
+              <div class="card mb-4">
+                  <div class="card-body">
+                      <h2 class="card-title">{{ event.title }}</h2>
+                      <p class="card-text">{{ event.description }}</p>
+                      <a href="{{ event.link }}" class="btn btn-primary">Buy Ticket</a>
+                  </div>
+                  <p class="text-muted">Posted on {{ event.posted_on.strftime('%B %d, %Y') }}</p>
+              </div>
+              {% endfor %}
           </div>
       </div>
-    </div>
     <!--end-->
     <!-- Footer Section -->
     <footer class="footer">

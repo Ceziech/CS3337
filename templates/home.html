@@ -11,7 +11,7 @@
             crossorigin="anonymous"
         />
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap">
-        <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+        <link rel="stylesheet" href=/static/home.css>
     </head>
 
     <body>
@@ -32,22 +32,26 @@
                             <li class="nav-item">
                                 <a class="nav-link active" aria-current="page" href="{{ url_for('parking') }}" aria-label="Go to Parking Page">Parking</a>
                             </li>
-
-                            {% if 'user_id' in session %}
+                        {% if session.get('user_id') %}
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ url_for('logout') }}" aria-label="Logout">Logout</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ url_for('account') }}" aria-label="Account">Account</a>
                             </li>
-                            {% else %}
+                            {% if session.get('is_admin') %}
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url_for('manage_events') }}" aria-label="Admin">Admin</a>
+                            </li>
+                            {% endif %}
+                         {% else %}
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ url_for('login') }}" aria-label="Go to Login Page">Login</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link active" href="{{ url_for('sign_in') }}" aria-label="Go to Sign-Up Page">Sign Up</a>
                             </li>
-                            {% endif %}
+                        {% endif %}                        
                         </ul>
                     </div>
                 </div>

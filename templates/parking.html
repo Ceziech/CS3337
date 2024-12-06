@@ -21,9 +21,19 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='parking.css') }}"
     />
+    <style>
+      a.card-link {
+        text-decoration: none; /* Removes underline */
+        color: inherit; /* Inherit parent color */
+      }
+  
+      a.card-link:hover {
+        text-decoration: none; /* No underline on hover */
+      }
+    </style>
   </head>
 
-  <body>
+  <body class="d-flex flex-column min-vh-100">
     <!-- Header Section -->
     <header>
       <nav class="navbar navbar-expand-lg navbar-custom navbar-dark">
@@ -74,6 +84,11 @@
                   >Logout</a
                 >
               </li>
+              {% if session.get('is_admin') %}
+                            <li class="nav-item">
+                                <a class="nav-link active" href="{{ url_for('manage_events') }}" aria-label="Admin">Admin</a>
+                            </li>
+                            {% endif %}
               {% else %}
               <li class="nav-item">
                 <a
@@ -94,225 +109,120 @@
               {% endif %}
             </ul>
           </div>
-        </div>
+        </div>  
       </nav>
     </header>
 
-    <main>
-      <div class="parking-grid">
-        <div
-          id="event-parking"
-          class="card"
-          data-url="{{ url_for('event_parking') }}?permit=event"
-        >
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}"
-              alt="Ticket Icon"
-              width="40"
-              height="40"
-            />
+    <main class="flex-grow-1">
+      <div class="container mt-4">
+        <!-- First Row (Top 4 Cards) -->
+        <div class="row g-3">
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('event_parking') }}?permit=event">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40" />
+                  <h3 class="card-title">Event Parking</h3>
+                  <p class="card-text">For events at Luckman, LACHSA, Fine Arts Complex, Theatre, Athletic games, and other events held on campus.</p>
+                </div>
+              </div>
+            </a>
           </div>
-          <h3>Event Parking</h3>
-          <p>
-            For events at Luckman, LACHSA, Fine Arts Complex, Theatre, Athletic
-            games and other events held on campus
-          </p>
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('parking_details') }}?permit=event">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40" />
+                  <h3 class="card-title">Visitor Parking</h3>
+                  <p class="card-text">One-day parking for campus visitors.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('parking_details') }}?permit=nonaffiliated">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40" />
+                  <h3 class="card-title">Non-Affiliated Parking Permits</h3>
+                  <p class="card-text">Buy a Non-Affiliated Parking Permit.</p>
+                </div>
+              </div>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('parking_details') }}?permit=2wheel">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/motorcycle-svgrepo.svg') }}" alt="Motorcycle Icon" width="40" height="40" />
+                  <h3 class="card-title">2-Wheel Permit</h3>
+                  <p class="card-text">Allows access for 2-Wheel vehicles.</p>
+                </div>
+              </div>
+            </a>
+          </div>
         </div>
-        <div
-          id="visitor-parking"
-          class="card"
-          data-url="{{ url_for('parking_details') }}?permit=event"
-        >
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}"
-              alt="Ticket Icon"
-              width="40"
-              height="40"
-            />
+        <!-- Second Row (Bottom 4 Cards) -->
+        <div class="row g-3 mt-3">
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('parking_details') }}?permit=highschool">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}" alt="Ticket Icon" width="40" height="40" />
+                  <h3 class="card-title">High School Permit</h3>
+                  <p class="card-text">Buy a High School Parking Permit.</p>
+                </div>
+              </div>
+            </a>
           </div>
-          <h3>Visitor Parking</h3>
-          <p>One-day parking for campus visitors</p>
-        </div>
-        <div
-          id="non-affiliated"
-          class="card"
-          data-url="{{ url_for('parking_details') }}?permit=nonaffiliated"
-        >
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}"
-              alt="Ticket Icon"
-              width="40"
-              height="40"
-            />
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('tickets') }}">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/creditCardPay-svgrepo.svg') }}" alt="Pay Ticket Icon" width="40" height="40" />
+                  <h3 class="card-title">Pay Ticket</h3>
+                  <p class="card-text">Pay a ticket online.</p>
+                </div>
+              </div>
+            </a>
           </div>
-          <h3>Non-Affiliated Parking Permits</h3>
-          <p>Buy a Non-Affiliated Parking Permit</p>
-        </div>
-        <div
-          id="highschool-permit"
-          class="card"
-          data-url="{{ url_for('parking_details') }}?permit=highschool"
-        >
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/ticket-svgrepo-com.svg') }}"
-              alt="Ticket Icon"
-              width="40"
-              height="40"
-            />
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('appeals_ticket') }}">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <img src="{{ url_for('static', filename='images/hammerLaw-svgrepo.svg') }}" alt="Appeal Ticket Icon" width="40" height="40" />
+                  <h3 class="card-title">Appeal Ticket</h3>
+                  <p class="card-text">File a request to appeal a ticket.</p>
+                </div>
+              </div>
+            </a>
           </div>
-          <h3>High School Permit</h3>
-          <p>Buy a Non-Affiliated Parking Permit</p>
-        </div>
-        <div
-          id="2wheel-permit"
-          class="card"
-          data-url="{{ url_for('parking_details') }}?permit=2wheel"
-        >
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/motorcycle-svgrepo.svg') }}"
-              alt="Motorcycle Icon"
-              width="40"
-              height="40"
-            />
+          <div class="col-md-6 col-lg-3">
+            <a class="card-link" data-url="{{ url_for('account') }}">
+              <div class="card h-100">
+                <div class="card-body text-center d-flex flex-column">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-car-front-fill" viewBox="0 0 16 16">
+                    <path
+                      d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"
+                    />
+                  </svg>
+                  <h3 class="card-title">Purchase a Cal State LA Permit</h3>
+                  <p class="card-text">Buy a permit for students or staff.</p>
+                </div>
+              </div>
+            </a>
           </div>
-          <h3>2-Wheel Permit</h3>
-          <p>Allows access for 2-Wheel vehicles.</p>
-        </div>
-        <div
-          id="purchase-u-pass"
-          class="card"
-          data-url="{{ url_for('login') }}"
-        >
-          <div class="card-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="35"
-              height="35"
-              fill="currentColor"
-              class="bi bi-bus-front"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M5 11a1 1 0 1 1-2 0 1 1 0 0 1 2 0m8 0a1 1 0 1 1-2 0 1 1 0 0 1 2 0m-6-1a1 1 0 1 0 0 2h2a1 1 0 1 0 0-2zm1-6c-1.876 0-3.426.109-4.552.226A.5.5 0 0 0 3 4.723v3.554a.5.5 0 0 0 .448.497C4.574 8.891 6.124 9 8 9s3.426-.109 4.552-.226A.5.5 0 0 0 13 8.277V4.723a.5.5 0 0 0-.448-.497A44 44 0 0 0 8 4m0-1c-1.837 0-3.353.107-4.448.22a.5.5 0 1 1-.104-.994A44 44 0 0 1 8 2c1.876 0 3.426.109 4.552.226a.5.5 0 1 1-.104.994A43 43 0 0 0 8 3"
-              />
-              <path
-                d="M15 8a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1V2.64c0-1.188-.845-2.232-2.064-2.372A44 44 0 0 0 8 0C5.9 0 4.208.136 3.064.268 1.845.408 1 1.452 1 2.64V4a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1v3.5c0 .818.393 1.544 1 2v2a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5V14h6v1.5a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-2c.607-.456 1-1.182 1-2zM8 1c2.056 0 3.71.134 4.822.261.676.078 1.178.66 1.178 1.379v8.86a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5V2.64c0-.72.502-1.301 1.178-1.379A43 43 0 0 1 8 1"
-              />
-            </svg>
-          </div>
-          <h3>Purchase U-Pass</h3>
-          <p>Purchase U-Pass</p>
-        </div>
-        <div
-          id="purchase-csula-permit"
-          class="card"
-          data-url="{{ url_for('login') }}"
-        >
-          <div class="card-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="36"
-              height="36"
-              fill="currentColor"
-              class="bi bi-car-front-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M2.52 3.515A2.5 2.5 0 0 1 4.82 2h6.362c1 0 1.904.596 2.298 1.515l.792 1.848c.075.175.21.319.38.404.5.25.855.715.965 1.262l.335 1.679q.05.242.049.49v.413c0 .814-.39 1.543-1 1.997V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.338c-1.292.048-2.745.088-4 .088s-2.708-.04-4-.088V13.5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1-.5-.5v-1.892c-.61-.454-1-1.183-1-1.997v-.413a2.5 2.5 0 0 1 .049-.49l.335-1.68c.11-.546.465-1.012.964-1.261a.8.8 0 0 0 .381-.404l.792-1.848ZM3 10a1 1 0 1 0 0-2 1 1 0 0 0 0 2m10 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2M6 8a1 1 0 0 0 0 2h4a1 1 0 1 0 0-2zM2.906 5.189a.51.51 0 0 0 .497.731c.91-.073 3.35-.17 4.597-.17s3.688.097 4.597.17a.51.51 0 0 0 .497-.731l-.956-1.913A.5.5 0 0 0 11.691 3H4.309a.5.5 0 0 0-.447.276L2.906 5.19Z"
-              />
-            </svg>
-          </div>
-          <h3>Purchase a Cal State La Permit</h3>
-          <p>
-            Purchase a Student or Faculty/Staff Permit. Please have License
-            Plate Information Ready
-          </p>
-        </div>
-        <div
-          id="view-account-fees"
-          class="card"
-          data-url="{{ url_for('login') }}"
-        >
-          <div class="card-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="35"
-              height="35"
-              fill="currentColor"
-              class="bi bi-coin"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z"
-              />
-              <path
-                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
-              />
-              <path
-                d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12"
-              />
-            </svg>
-          </div>
-          <h3>View Account Fees</h3>
-          <p>View all fees on your account</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/creditCardPay-svgrepo.svg') }}"
-              alt="Pay Ticket Online"
-              width="40"
-              height="40"
-            />
-          </div>
-          <h3>Pay Ticket</h3>
-          <p>Pay a ticket online</p>
-        </div>
-        <div class="card">
-          <div class="card-icon">
-            <img
-              src="{{ url_for('static', filename='images/hammerLaw-svgrepo.svg') }}"
-              alt="Appeal Ticket"
-              width="35"
-              height="35"
-            />
-          </div>
-          <h3>Appeal Ticket</h3>
-          <p>File a request to appeal a ticket</p>
-        </div>
-        <div
-          id="change-account-vehicles"
-          class="card"
-          data-url="{{ url_for('login') }}"
-        >
-          <div class="card-icon">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="35"
-              height="35"
-              fill="currentColor"
-              class="bi bi-pencil-square"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-              />
-            </svg>
-          </div>
-          <h3>Change Account Vehicles</h3>
-          <p>Modify vehicles on your account</p>
         </div>
       </div>
     </main>
+    <script>
+      document.querySelectorAll(".card-link").forEach((card) => {
+        card.addEventListener("click", function () {
+          window.location.href = this.getAttribute("data-url");
+        });
+      });
+    </script>
+    
     <!-- Footer Section -->
     <footer class="footer-custom text-white py-1">
       <div class="container-fluid text-center">

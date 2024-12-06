@@ -65,7 +65,9 @@
         <div class="card-body">
           <h5 class="card-title">General Admission</h5>
           <p class="card-text">$50</p>
-          <a href="#" class="btn btn-primary">Buy Now</a>
+          <form method="POST" action="{{ url_for('purchase_ticket') }}">
+              <button type="submit" class="btn btn-primary">Buy Now</button>
+          </form>
         </div>
       </div>
     </div>
