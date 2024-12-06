@@ -42,6 +42,7 @@
         <a href="#" onclick="showSection('manageUsers')">Manage Users</a>
         <a href="#" onclick="showSection('manageVehicles')">Manage Vehicles</a>
         <a href="#" onclick="showSection('manageEvents')">Manage Events</a>
+        <a href="#" onclick="showSection('manageTickets')">Manage Tickets</a>
     </div>
 
     <!-- Content -->
@@ -95,6 +96,29 @@
                 <button type="submit" class="btn btn-primary">Add Event</button>
             </form>
         </div>
+        <div id="manageTickets" class="admin-section" style="display: none;">
+            <h1>Manage Tickets</h1>
+            <form id="searchTicketForm" class="mb-4">
+                <div class="mb-3">
+                    <label for="ticket_license_plate" class="form-label">Enter Vehicle License Plate</label>
+                    <input type="text" class="form-control" id="ticket_license_plate" name="ticket_license_plate" required>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="searchTickets()">Search Tickets</button>
+            </form>
+            <div id="ticketInfo"></div>
+            <form id="addTicketForm" class="mb-4">
+                <div class="mb-3">
+                    <label for="ticket_amount" class="form-label">Ticket Amount</label>
+                    <input type="number" class="form-control" id="ticket_amount" name="ticket_amount" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ticket_comments" class="form-label">Comments</label>
+                    <textarea class="form-control" id="ticket_comments" name="ticket_comments" rows="3"></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addTicket()">Add Ticket</button>
+            </form>
+        </div>
+        
     </div>
 
     <!-- JavaScript -->
@@ -150,6 +174,56 @@
             .then(data => {
                 if (data.success) {
                     alert('User details updated successfully!');
+                }
+            });
+        }
+        function searchTickets() {
+            const license_plate = document.getElementById('ticket_license_plate').value;
+            fetch('/admin/get_tickets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ license_plate })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('ticketInfo').innerHTML = `<p class="text-danger">${data.error}</p>`;
+                } else {
+                    let ticketHtml = '<h3>Tickets</h3>';
+                    data.tickets.forEach(ticket => {
+                        ticketHtml += `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Ticket ID: ${ticket.id}</h5>
+                                    <p class="card-text">Amount: ${ticket.amount}</p>
+                                    <p class="card-text">Comments: ${ticket.comments}</p>
+                                    <p class="card-text">Date: ${ticket.date}</p>
+                                </div>
+                            </div>`;
+                    });
+                    document.getElementById('ticketInfo').innerHTML = ticketHtml;
+                }
+            });
+        }
+
+        function addTicket() {
+            const license_plate = document.getElementById('ticket_license_plate').value;
+            const amount = document.getElementById('ticket_amount').value;
+            const comments = document.getElementById('ticket_comments').value;
+            fetch('/admin/add_ticket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ license_plate, amount, comments })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Ticket added successfully!');
+                    searchTickets();
                 }
             });
         }

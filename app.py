@@ -13,7 +13,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = 'GIGASECRETKEY'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'databaseurl')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI', 'postgresql://zork:cnHjpkHPDWxrjRb9Vx1P@parking-db.c766iu0ku433.us-west-2.rds.amazonaws.com:5432/parking_db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -28,6 +28,49 @@ class User(db.Model):
     is_admin = db.Column(db.Boolean, default=False)
     def __repr__(self):
         return f'<User {self.name}>'
+
+# Ticket model
+class Ticket(db.Model):
+    __tablename__ = 'tickets'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    license_plate = db.Column(db.String(20), db.ForeignKey('vehicles.license_plate'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    comments = db.Column(db.Text, nullable=True)
+    date = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship('User', backref=db.backref('tickets', lazy=True))
+    vehicle = db.relationship('Vehicle', backref=db.backref('tickets', lazy=True))
+
+    def __repr__(self):
+        return f'<Ticket {self.id} - License Plate: {self.license_plate}, Amount: {self.amount}>'
+
+# Endpoint to add a ticket
+@app.route('/admin/add_ticket', methods=['POST'])
+def add_ticket():
+    if not session.get('is_admin'):  # Ensure only admins can add tickets
+        return jsonify({'error': 'Unauthorized access'}), 403
+
+    data = request.json
+    license_plate = data.get('license_plate')
+    amount = data.get('amount')
+    comments = data.get('comments')
+
+    vehicle = Vehicle.query.filter_by(license_plate=license_plate).first()
+    if not vehicle:
+        return jsonify({'error': 'Vehicle not found'}), 404
+
+    new_ticket = Ticket(
+        license_plate=license_plate,
+        user_id=vehicle.user_id,
+        amount=amount,
+        comments=comments
+    )
+    db.session.add(new_ticket)
+    db.session.commit()
+    
+    return jsonify({'success': True, 'ticket_id': new_ticket.id})
+
     
 class Permit(db.Model):
     __tablename__ = 'permits'
@@ -516,6 +559,7 @@ def create_checkout_session():
             '2wheel': 'price_1QSwhvRptQOte5PDkTYfjrph',
             'highschool': 'price_1QSwiHRptQOte5PDMTFSDSIj',
             'nonaffiliated': 'price_1QSwifRptQOte5PDduZdgV6D',
+            'ticket': 'price_1QT9H2RptQOte5PDU8HbvA6d '
         }
 
         # Get the price ID for the selected permit
@@ -567,6 +611,39 @@ def create_payment_intent():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@app.route('/lookup_ticket', methods=['POST'])
+def lookup_ticket():
+    try:
+        data = request.json
+        ticket_number = data.get('ticketNumber')
+        plate_or_vin = data.get('plateOrVin')
+
+        if not ticket_number and not plate_or_vin:
+            return jsonify({'error': 'Please provide either a ticket number or a plate/VIN.'}), 400
+
+        # Query the ticket based on ticket number or license plate
+        ticket = None
+        if ticket_number:
+            ticket = Ticket.query.filter_by(id=ticket_number).first()
+        elif plate_or_vin:
+            ticket = Ticket.query.filter_by(license_plate=plate_or_vin).first()
+
+        if not ticket:
+            return jsonify({'error': 'Ticket not found.'}), 404
+
+        ticket_data = {
+            'id': ticket.id,
+            'license_plate': ticket.license_plate,
+            'amount': float(ticket.amount),
+            'comments': ticket.comments,
+            'date': ticket.date.isoformat()
+        }
+
+        return jsonify({'ticket': ticket_data})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/payment-success', methods=['POST'])
 def payment_success():
     try:
@@ -579,38 +656,58 @@ def payment_success():
             return jsonify({"error": "User not found"}), 400
 
         permits_created = []
+        total_ticket_payment = 0  # To track ticket payments
 
-        # Add permits for each cart item
+        # Process each item in the cart
         for item in cart:
             app.logger.info(f"Processing item: {item}")
             if not isinstance(item, dict):
                 app.logger.error(f"Invalid item in cart: {item}")
                 raise ValueError("Invalid item in cart")
-            permit_type = item['name']
-            price = item['price']
-            start_date, end_date = calculate_permit_dates(permit_type)
 
-            new_permit = Permit(
-                user_id=user.id,
-                permit_type=permit_type,
-                start_date=start_date,
-                end_date=end_date,
-                price=price
-            )
-            db.session.add(new_permit)
-            permits_created.append({
-                "id": new_permit.id,
-                "user_id": new_permit.user_id,
-                "permit_type": new_permit.permit_type,
-                "start_date": new_permit.start_date.isoformat(),
-                "end_date": new_permit.end_date.isoformat(),
-                "price": new_permit.price
-            })
+            item_name = item['name']
+            price = item['price']
+
+            if item_name.startswith("Ticket #"):  # Check if the item is a ticket
+                total_ticket_payment += price  # Add ticket amount to the total
+            else:
+                # Handle permit logic (unchanged)
+                permit_type = item_name
+                start_date, end_date = calculate_permit_dates(permit_type)
+
+                new_permit = Permit(
+                    user_id=user.id,
+                    permit_type=permit_type,
+                    start_date=start_date,
+                    end_date=end_date,
+                    price=price
+                )
+                db.session.add(new_permit)
+                permits_created.append({
+                    "id": new_permit.id,
+                    "user_id": new_permit.user_id,
+                    "permit_type": new_permit.permit_type,
+                    "start_date": new_permit.start_date.isoformat(),
+                    "end_date": new_permit.end_date.isoformat(),
+                    "price": new_permit.price
+                })
+
+        # Subtract ticket payments from user's currently_due
+        if total_ticket_payment > 0:
+            user.currently_due -= total_ticket_payment
+            if user.currently_due < 0:
+                user.currently_due = 0  # Prevent negative balances
 
         db.session.commit()
 
         app.logger.info(f"Permits created: {permits_created}")
-        return jsonify({"success": True, "message": "Permits created successfully!", "permits": permits_created})
+        app.logger.info(f"Total ticket payment deducted: ${total_ticket_payment:.2f}")
+        return jsonify({
+            "success": True,
+            "message": f"Payment processed successfully! Tickets: ${total_ticket_payment:.2f}, Permits created: {len(permits_created)}",
+            "currently_due": user.currently_due,
+            "permits": permits_created
+        })
 
     except Exception as e:
         db.session.rollback()

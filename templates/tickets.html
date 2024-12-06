@@ -63,8 +63,10 @@
                     <label for="plateOrVin" class="me-2 fw-bold">Plate # or VIN*</label>
                     <input type="text" id="plateOrVin" class="form-control me-3" placeholder="Enter Plate # or VIN" style="width: 200px;">
 
-                    <button type="button" class="btn btn-warning">Search</button>
+                    <button type="button" class="btn btn-warning" onclick="lookupTicket()">Search</button>
                 </div>
+                <div id="ticketResult"></div>
+
                 <p>As part of our commitment to providing safe and accessible parking, parking citations can be issued to any vehicle found in violation of Cal State LA's Parking Regulations. All citations are issued in accordance with the California Vehicle Code. Regulations are enforced 24/7, holidays included. It should be understood that a warning may be issued for a parking violation, however a citation can be received on the first violation.</p>
 
                 <p>To make a payment or appeal/contest a citation enter your Ticket, Plate, or VIN information above.</p>
@@ -131,5 +133,42 @@
           integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
           crossorigin="anonymous"
   ></script>
+  <script>
+      function lookupTicket() {
+            const ticketNumber = document.getElementById('ticketNumber').value;
+            const plateOrVin = document.getElementById('plateOrVin').value;
+
+            fetch('/lookup_ticket', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ ticketNumber, plateOrVin })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('ticketResult').innerHTML = `<p class="text-danger">${data.error}</p>`;
+                } else {
+                    // Add ticket information to the cart
+                    const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+                    const ticket = data.ticket;
+                    cart.push({ name: `Ticket #${ticket.id}`, price: ticket.amount });
+                    sessionStorage.setItem('cart', JSON.stringify(cart));
+
+                    // Debugging log
+                    console.log("Updated cart:", cart);
+
+                    // Redirect to the shopping cart page
+                    window.location.href = "{{ url_for('shop_cart_page') }}";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('ticketResult').innerHTML = `<p class="text-danger">An error occurred. Please try again.</p>`;
+            });
+        }
+
+  </script>
 </body>
 </html>
