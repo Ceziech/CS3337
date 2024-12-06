@@ -1,11 +1,35 @@
-body {
-    background-color: #393939;
-    overscroll-behavior: contain;
+html, body {
+    height: 100%;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    background-image: url("images/car-image.jpg");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    font-family: 'Montserrat', sans-serif;
+}
+.content {
+    flex: 1;
+  }
+footer {
+    width: 100%;
+    background-color: #111111;
+    color: aliceblue;
+    padding: 20px 0;
+    text-align: center; 
 }
 
+footer p {
+    color: white;
+}
+.footer-content {
+    padding-top: 13px;
+}
+.footer-content a svg {
+    transition: fill 0.3s ease-in-out;
+}
 .card {
     background-color: hwb(46 4% 13%);
     border: 2px solid black;
@@ -56,22 +80,8 @@ p {
     color: black;
 }
 
-.footer p {
-    color: white;
-}
-
-
-
 .navbar-custom {
     background-color: #111111d0;
-}
-
-
-.footer{
-    background-color: #111111;
-    padding: 20px 0;
-    text-align: center;
-    margin:0px;
 }
 
 .btn-custom {

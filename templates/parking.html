@@ -75,11 +75,15 @@
                 >
               </li>
               {% if session.get('is_admin') %}
-                            <li class="nav-item">
-                                <a class="nav-link active" href="{{ url_for('manage_events') }}" aria-label="Admin">Admin</a>
-                            </li>
-                            {% endif %}
-              {% else %}
+              <li class="nav-item">
+                <a
+                  class="nav-link active"
+                  href="{{ url_for('manage_events') }}"
+                  aria-label="Admin"
+                  >Admin</a
+                >
+              </li>
+              {% endif %} {% else %}
               <li class="nav-item">
                 <a
                   class="nav-link active"
@@ -103,7 +107,7 @@
       </nav>
     </header>
 
-    <main>
+    <main class="content">
       <div class="parking-grid">
         <div
           id="event-parking"
