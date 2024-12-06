@@ -65,6 +65,15 @@ main {
     text-align: left;
 }
 
+#permit-type {
+    margin: 10px 0;
+    padding: 8px;
+    width: 100%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
 #cart-summary {
     text-align: right;
     margin-bottom: 10px;
