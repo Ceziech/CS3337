@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <link rel="stylesheet" href="shop_cart_page.css"> <!-- Reuse CSS for consistency -->
+    <style>
+        #checkout-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+        }
+
+        #checkout-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #checkout-table th, #checkout-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .summary-section {
+            text-align: right;
+        }
+
+        .summary-section p {
+            margin: 5px 0;
+        }
+
+        .place-order-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #FFC107;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .place-order-btn:hover {
+            background-color: #FFA000;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="calstatela_logo.png" alt="Cal State LA Logo" class="logo">
+            <h1>Parking and Transportation Checkout</h1>
+        </div>
+    </header>
+
+    <main id="checkout-container">
+        <h2>Review Your Cart</h2>
+        <table id="checkout-table">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Cart items will be dynamically populated here -->
+            </tbody>
+        </table>
+        <div class="summary-section">
+            <p id="subtotal">Sub-Total: $0.00</p>
+            <p id="tax">City of Los Angeles 10% Parking Occupancy Tax: $0.00</p>
+            <p id="total">Total: $0.00</p>
+        </div>
+        <button id="place-order-btn" class="place-order-btn">Place Order</button>
+    </main>
+
+    <footer>
+        <p>AIMS Web 9.0.0.20 © 2024 EDC Corporation</p>
+    </footer>
+
+    <script src="checkout.js"></script>
+</body>
+</html>

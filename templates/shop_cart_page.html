@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Parking Checkout</title>
-    <script src="https://js.stripe.com/v3/" async></script> <!-- Stripe Checkout Library! -->
-    <link rel="stylesheet" href="/static/shop_cart_page.css"> <!-- Updated CSS reference -->
+    <link rel="stylesheet" href="shop_cart_page.css"> <!-- Updated CSS reference -->
 </head>
 <body>
     <header>
@@ -20,20 +19,29 @@
     <main>
         <section class="cart">
             <h2>Your Shopping Cart</h2>
+            <form id="add-permit-form">
+                <label for="permit-type">Choose Permit Type:</label>
+                <select id="permit-type" name="permit-type" required>
+                    <option value="" disabled selected>Select a permit</option>
+                    <option value="1-day">1-Day Parking Permit - $10.00</option>
+                    <option value="7-day">7-Day Parking Permit - $50.00</option>
+                    <option value="30-day">30-Day Parking Permit - $100.00</option>
+                </select>
+                <button type="submit" class="continue-btn">Add to Cart</button>
+            </form>
             <table id="cart-table">
                 <tr>
                     <th>Item</th>
                     <th>Price</th>
-                    <th>View</th>
+                    <th>Remove</th>
                 </tr>
-                <!-- Cart items will be dynamically added here -->
             </table>
             <div id="cart-summary">
                 <p id="subtotal">Sub-Total: $0.00</p>
                 <p id="tax">City of Los Angeles 10% Parking Occupancy Tax: $0.00</p>
                 <p id="total">Total: $0.00</p>
             </div>
-            <button id="remove-item-btn" class="remove-btn">Remove</button>
+            <button id="remove-item-btn" class="remove-btn">Remove All Items</button>
         </section>
 
         <section class="checkout">
@@ -46,7 +54,7 @@
                     <img src="mastercard.png" alt="MasterCard">
                     <img src="discover.png" alt="Discover">
                 </div>
-                <button type="submit" class="continue-btn" id="continuestripe">Continue</button>
+                <button type="button" id="continue-btn" class="continue-btn">Continue</button>
             </form>
         </section>
     </main>
@@ -56,29 +64,5 @@
     </footer>
 
     <script src="shop_cart_page.js"></script> <!-- Updated JS reference -->
-
-        <!-- Stripe Function -->
-    <script> 
-        var stripeAPI = Stripe(
-            "pk_live_51LDjiGKBruxK63vzhtfZ3mcVTtbUlh6JTYlXGmyRhuYyQCpFO12ILAYBDCwUcCHJxHZQ5AZBIUdDINCgem2iFxFh00Q8lTaL5Q"
-        )
-
-        document.getElementById("continuestripe").addEventListener("click", function() {
-
-            stripeAPI.redirectToCheckout ({
-                lineItems: [
-                    {
-                        price: "price_1QO66eKBruxK63vzOEyUA5b5",
-                        quantity: 1,
-                    },
-                ],
-                    mode: "one-time",
-                    successUrl: "/static/home.html",
-                    cancelURL: "/static/shop_cart_page.html",
-            }).then(function(result) {
-                alert(result)
-            });
-        })
-    </script>
 </body>
 </html>
