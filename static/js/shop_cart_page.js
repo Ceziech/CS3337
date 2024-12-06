@@ -1,67 +1,94 @@
 document.addEventListener('DOMContentLoaded', () => {
     let cart = [];
-    const taxRate = 0.10; // 10% tax rate
+    const taxRate = 0.10;
 
     const cartTable = document.getElementById('cart-table');
     const subtotalElement = document.getElementById('subtotal');
     const taxElement = document.getElementById('tax');
     const totalElement = document.getElementById('total');
-    const removeItemButton = document.getElementById('remove-item-btn');
+    const removeAllButton = document.getElementById('remove-item-btn');
+    const addPermitForm = document.getElementById('add-permit-form');
+    const continueButton = document.getElementById('continue-btn');
 
-    // Example item to add for demonstration
-    const item = {
-        name: 'Permit - 1-Day Event and Visitor Parking Permit',
-        price: 10.00
+    const permitPrices = {
+        '1-day': { name: '1-Day Parking Permit', price: 10.00 },
+        '7-day': { name: '7-Day Parking Permit', price: 50.00 },
+        '30-day': { name: '30-Day Parking Permit', price: 100.00 },
     };
 
-    // Add a sample item for visual demo
-    addItemToCart(item);
-    updateCartDisplay();
+    addPermitForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const permitType = document.getElementById('permit-type').value;
+        if (permitType && permitPrices[permitType]) {
+            addItemToCart(permitPrices[permitType]);
+            updateCartDisplay();
+        }
+    });
+
+    continueButton.addEventListener('click', () => {
+        // Check if the cart has items
+        if (cart.length === 0) {
+            alert('Your cart is empty. Please add items before continuing.');
+            return;
+        }
+
+        // Save the cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+        // Redirect to the checkout page
+        window.location.href = 'checkout.html';
+    });
 
     function addItemToCart(item) {
         cart.push(item);
     }
 
-    function removeItemFromCart() {
-        if (cart.length > 0) {
-            cart.pop(); // Removes the last item
-            updateCartDisplay();
-        }
+    function removeItem(index) {
+        cart.splice(index, 1);
+        updateCartDisplay();
     }
 
     function updateCartDisplay() {
-        // Clear current table rows (except header)
         cartTable.innerHTML = `
             <tr>
                 <th>Item</th>
                 <th>Price</th>
-                <th>View</th>
+                <th>Remove</th>
             </tr>
         `;
 
         let subtotal = 0;
 
-        // Display each item in the cart
         cart.forEach((item, index) => {
             subtotal += item.price;
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${item.name}</td>
                 <td>$${item.price.toFixed(2)}</td>
-                <td><button onclick="removeItem(${index})">Remove</button></td>
+                <td><button class="remove-btn" data-index="${index}">Remove</button></td>
             `;
             cartTable.appendChild(row);
         });
 
-        // Update cart totals
         const tax = subtotal * taxRate;
         const total = subtotal + tax;
 
         subtotalElement.textContent = `Sub-Total: $${subtotal.toFixed(2)}`;
         taxElement.textContent = `City of Los Angeles 10% Parking Occupancy Tax: $${tax.toFixed(2)}`;
         totalElement.textContent = `Total: $${total.toFixed(2)}`;
+
+        // Attach remove event listeners
+        document.querySelectorAll('.remove-btn').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const index = btn.dataset.index;
+                removeItem(index);
+            });
+        });
     }
 
-    // Button event listener
-    removeItemButton.addEventListener('click', removeItemFromCart);
+    removeAllButton.addEventListener('click', () => {
+        cart = [];
+        updateCartDisplay();
+    });
 });
