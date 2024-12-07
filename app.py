@@ -315,12 +315,65 @@ def delete_vehicle(license_plate):
         return redirect(url_for('login'))
 
     vehicle = Vehicle.query.get(license_plate)
+    db.session.delete(vehicle)
+    db.session.commit()
+    flash("Vehicle deleted successfully.", "success")
+    return redirect(url_for('manage_vehicle'))
     if vehicle and vehicle.user_id == session['user_id']:
         db.session.delete(vehicle)
         db.session.commit()
         flash("Vehicle deleted successfully.", "success")
     else:
         flash("Unauthorized access or vehicle not found.", "danger")
+    return redirect(url_for('manage_vehicle'))
+
+@app.route('/add_vehicle', methods=['POST'])
+def add_vehicle():
+    if 'user_id' not in session:
+        flash("Please log in to add a vehicle.", "warning")
+        return redirect(url_for('login'))
+
+    license_plate = request.form.get('license_plate')
+    vehicle_type = request.form.get('vehicle_type')
+    make = request.form.get('make')
+    model = request.form.get('model')
+    year = request.form.get('year')
+    color = request.form.get('color')
+
+    # Validate input
+    if not (license_plate and vehicle_type and make and model and year and color):
+        flash("All fields are required to add a vehicle.", "danger")
+        return redirect(url_for('manage_vehicle'))
+
+    if not year.isdigit() or int(year) < 1886 or int(year) > datetime.now().year + 1:  # Validation for year
+        flash("Invalid year. Please enter a valid year.", "danger")
+        return redirect(url_for('manage_vehicle'))
+
+    # Check if vehicle already exists
+    existing_vehicle = Vehicle.query.filter_by(license_plate=license_plate).first()
+    if existing_vehicle:
+        flash("A vehicle with this license plate already exists.", "danger")
+        return redirect(url_for('manage_vehicle'))
+
+    # Add new vehicle
+    new_vehicle = Vehicle(
+        license_plate=license_plate,
+        vehicle_type=vehicle_type,
+        make=make,
+        model=model,
+        year=int(year),
+        color=color,
+        user_id=session['user_id']
+    )
+
+    try:
+        db.session.add(new_vehicle)
+        db.session.commit()
+        flash("Vehicle added successfully.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash(f"An error occurred while adding the vehicle: {str(e)}", "danger")
+
     return redirect(url_for('manage_vehicle'))
 
 @app.route('/fetch_vehicle', methods=['POST'])

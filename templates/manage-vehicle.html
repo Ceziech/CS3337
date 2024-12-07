@@ -10,7 +10,6 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            
         }
     </style>
 </head>
@@ -21,14 +20,20 @@
             <h2>Manage Your Vehicles</h2>
 
             <div class="form-container">
-                <form method="POST" action="{{ url_for('manage_vehicle') }}">
+                <form method="POST" action="/add_vehicle">
                     <div class="form-group">
                         <label for="license_plate">License Plate:</label>
                         <input type="text" id="license_plate" name="license_plate" required>
                     </div>
                     <div class="form-group">
                         <label for="vehicle_type">Vehicle Type:</label>
-                        <input type="text" id="vehicle_type" name="vehicle_type" required>
+                        <select id="vehicle_type" name="vehicle_type" required>
+                            <option value="car">Car</option>
+                            <option value="truck">Truck</option>
+                            <option value="motorcycle">Motorcycle</option>
+                            <option value="van">Van</option>
+                            <option value="suv">SUV</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="make">Make:</label>
@@ -50,12 +55,11 @@
                 </form>
             </div>
 
-
             <h3>Your Registered Vehicles</h3>
             <ul>
                 {% for vehicle in vehicles %}
                     <li>{{ vehicle.license_plate }} - {{ vehicle.make }} {{ vehicle.model }}
-                        <form action="{{ url_for('delete_vehicle', license_plate=vehicle.license_plate) }}" method="POST" style="display: inline;">
+                        <form action="/delete_vehicle/{{ vehicle.license_plate }}" method="POST" style="display: inline;">
                             <button type="submit">Delete</button>
                         </form>
                     </li>
